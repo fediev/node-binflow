@@ -1,0 +1,28 @@
+{
+  "name": "node-binflow",
+  "version": "0.1.0",
+  "description": "node buffer parser and encoder",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
+  },
+  "scripts": {
+    "test": "mocha test/**/*.test.js",
+    "test:watch": "npm run test -- --watch"
+  },
+  "author": "flyingloft",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/flyingloft/node-binflow.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/flyingloft/node-binflow/issues"
+  },
+  "homepage": "https://gitlab.com/flyingloft/node-binflow#README"
+}
