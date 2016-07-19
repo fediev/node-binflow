@@ -62,4 +62,56 @@ describe('binflow', () => {
       });
     });
   });
+  describe('parse()', () => {
+    it('should parse int with defalut endian(LE)', () => {
+      const buf = Buffer.from([0x01, 0xff, 0x03, 0x04, 0x05, 0x06]);
+      const stru = {
+        prop1: 'uint8',
+        prop2: 'int8',
+        prop3: 'int32',
+      };
+      const expected = {
+        prop1: 0x01,
+        prop2: -1,
+        prop3: 0x06050403,
+      };
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.parse(buf);
+      result.should.eql(expected);
+    });
+    it('should parse int with little endian', () => {
+      const buf = Buffer.from([0x01, 0xff, 0x03, 0x04, 0x05, 0x06]);
+      const stru = {
+        prop1: 'uint8',
+        prop2: 'int8',
+        prop3: 'int32',
+      };
+      const endian = 'LE';
+      const expected = {
+        prop1: 0x01,
+        prop2: -1,
+        prop3: 0x06050403,
+      };
+      const bnf = binflow.createBinflow(stru, endian);
+      const result = bnf.parse(buf);
+      result.should.eql(expected);
+    });
+    it('should parse int with big endian', () => {
+      const buf = Buffer.from([0x01, 0xff, 0x03, 0x04, 0x05, 0x06]);
+      const stru = {
+        prop1: 'uint8',
+        prop2: 'int8',
+        prop3: 'int32',
+      };
+      const endian = 'BE';
+      const expected = {
+        prop1: 0x01,
+        prop2: -1,
+        prop3: 0x03040506,
+      };
+      const bnf = binflow.createBinflow(stru, endian);
+      const result = bnf.parse(buf);
+      result.should.eql(expected);
+    });
+  });
 });
