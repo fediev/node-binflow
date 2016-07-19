@@ -45,4 +45,21 @@ describe('binflow', () => {
       });
     });
   });
+  describe('_removeTail()', () => {
+    const _removeTail = binflow.createBinflow()._removeTail;
+
+    it('should get unchaned on normal tokens', () => {
+      tokens.forEach((token) => {
+        _removeTail(token).should.eql(token);
+      });
+    });
+    it('should get true on endian-tailed tokens', () => {
+      tokensLE.forEach((token, idx) => {
+        _removeTail(token).should.eql(tokens[idx]);
+      });
+      tokensBE.forEach((token, idx) => {
+        _removeTail(token).should.eql(tokens[idx]);
+      });
+    });
+  });
 });
