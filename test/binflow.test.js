@@ -8,6 +8,8 @@ const tokensNE = binflow.TYPES; // tokens with No Endian
 const tokensLE = tokensNE.map((token) => `${token}LE`);
 const tokensBE = tokensNE.map((token) => `${token}BE`);
 // const tokensAll = [...tokens, ...tokensLE, ...tokensBE];
+const buf1234 = Buffer.from('0102030405060708090a', 'hex');
+const bufffff = Buffer.from('ffffffffffffffff', 'hex');
 
 describe('binflow', () => {
   describe('createBinflow()', () => {
@@ -16,6 +18,7 @@ describe('binflow', () => {
       result.should.be.an('object');
     });
   });
+
   describe('_hasEndian()', () => {
     const _hasEndian = binflow._hasEndian;
 
@@ -33,6 +36,7 @@ describe('binflow', () => {
       });
     });
   });
+
   describe('_getType()', () => {
     const _getType = binflow._getType;
 
@@ -50,6 +54,164 @@ describe('binflow', () => {
       });
     });
   });
+
+  describe('_readByToken()', () => {
+    const _readByToken = binflow._readByToken;
+
+    const doIntTest = (token) => {
+      const result = [];
+      result.push(_readByToken(buf1234, 0, token));
+      result.push(_readByToken(buf1234, 1, token, 'LE'));
+      result.push(_readByToken(buf1234, 1, token, 'BE'));
+      result.push(_readByToken(bufffff, 0, token));
+      return result;
+    };
+
+    it('should read `int8`', () => {
+      const token = 'int8';
+      const expected = [0x01, 0x02, 0x02, -1];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `int8LE`', () => {
+      const token = 'int8LE';
+      const expected = [0x01, 0x02, 0x02, -1];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `int8BE`', () => {
+      const token = 'int8BE';
+      const expected = [0x01, 0x02, 0x02, -1];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `int16', () => {
+      const token = 'int16';
+      const expected = [0x0201, 0x0302, 0x0203, -1];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `int16LE', () => {
+      const token = 'int16LE';
+      const expected = [0x0201, 0x0302, 0x0302, -1];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `int16BE', () => {
+      const token = 'int16BE';
+      const expected = [0x0102, 0x0203, 0x0203, -1];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `int32', () => {
+      const token = 'int32';
+      const expected = [0x04030201, 0x05040302, 0x02030405, -1];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `int32LE', () => {
+      const token = 'int32LE';
+      const expected = [0x04030201, 0x05040302, 0x05040302, -1];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `int32BE', () => {
+      const token = 'int32BE';
+      const expected = [0x01020304, 0x02030405, 0x02030405, -1];
+      doIntTest(token).should.eql(expected);
+    });
+
+    it('should read `uint8`', () => {
+      const token = 'uint8';
+      const expected = [0x01, 0x02, 0x02, 0xff];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `uint8LE`', () => {
+      const token = 'uint8LE';
+      const expected = [0x01, 0x02, 0x02, 0xff];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `uint8BE`', () => {
+      const token = 'uint8BE';
+      const expected = [0x01, 0x02, 0x02, 0xff];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `uint16', () => {
+      const token = 'uint16';
+      const expected = [0x0201, 0x0302, 0x0203, 0xffff];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `uint16LE', () => {
+      const token = 'uint16LE';
+      const expected = [0x0201, 0x0302, 0x0302, 0xffff];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `uint16BE', () => {
+      const token = 'uint16BE';
+      const expected = [0x0102, 0x0203, 0x0203, 0xffff];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `uint32', () => {
+      const token = 'uint32';
+      const expected = [0x04030201, 0x05040302, 0x02030405, 0xffffffff];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `uint32LE', () => {
+      const token = 'uint32LE';
+      const expected = [0x04030201, 0x05040302, 0x05040302, 0xffffffff];
+      doIntTest(token).should.eql(expected);
+    });
+    it('should read `uint32BE', () => {
+      const token = 'uint32BE';
+      const expected = [0x01020304, 0x02030405, 0x02030405, 0xffffffff];
+      doIntTest(token).should.eql(expected);
+    });
+
+    const doFloatDoubleTest = (token, exp1, exp2, exp3) => {
+      const bufSize = token.slice(0, 5) === 'float' ? 4 : 8;
+      const bufs = {};
+      bufs.LE = Buffer.alloc(bufSize);
+      bufs.BE = Buffer.alloc(bufSize);
+      const value = 1234.5678;
+      const margin = 0.0001;
+      if (bufSize === 4) {
+        bufs.LE.writeFloatLE(value);
+        bufs.BE.writeFloatBE(value);
+      } else {
+        bufs.LE.writeDoubleLE(value);
+        bufs.BE.writeDoubleBE(value);
+      }
+
+      _readByToken(bufs[exp1], 0, token).should.be
+        .within(value - margin, value + margin, 'without endian');
+      _readByToken(bufs[exp2], 0, token, 'LE').should.be
+        .within(value - margin, value + margin, 'with LE');
+      _readByToken(bufs[exp3], 0, token, 'BE').should.be
+        .within(value - margin, value + margin, 'with BE');
+    };
+
+    it('should read `float`', () => {
+      const token = 'float';
+      doFloatDoubleTest(token, 'LE', 'LE', 'BE');
+    });
+    it('should read `floatLE`', () => {
+      const token = 'floatLE';
+      doFloatDoubleTest(token, 'LE', 'LE', 'LE');
+    });
+    it('should read `floatBE`', () => {
+      const token = 'floatBE';
+      doFloatDoubleTest(token, 'BE', 'BE', 'BE');
+    });
+    it('should read `double`', () => {
+      const token = 'double';
+      doFloatDoubleTest(token, 'LE', 'LE', 'BE');
+    });
+    it('should read `doubleLE`', () => {
+      const token = 'doubleLE';
+      doFloatDoubleTest(token, 'LE', 'LE', 'LE');
+    });
+    it('should read `doubleBE`', () => {
+      const token = 'doubleBE';
+      doFloatDoubleTest(token, 'BE', 'BE', 'BE');
+    });
+  });
+
+  describe('#_parseStringToken()', () => {
+    it('should')
+  });
+
   describe('parse()', () => {
     it('should parse int with defalut endian(LE)', () => {
       const buf = Buffer.from([0x01, 0xff, 0x03, 0x04, 0x05, 0x06]);
