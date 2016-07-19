@@ -17,7 +17,7 @@ describe('binflow', () => {
     });
   });
   describe('_hasEndian()', () => {
-    const _hasEndian = binflow.createBinflow()._hasEndian;
+    const _hasEndian = binflow._hasEndian;
 
     it('should get false on normal tokens', () => {
       tokensNE.forEach((token) => {
@@ -34,7 +34,7 @@ describe('binflow', () => {
     });
   });
   describe('_getType()', () => {
-    const _getType = binflow.createBinflow()._getType;
+    const _getType = binflow._getType;
 
     it('should get token itself on normal tokens', () => {
       tokensNE.forEach((token) => {
