@@ -4,21 +4,9 @@ const chai = require('chai');
 const should = chai.should();
 const binflow = require('../lib/binflow');
 
-const tokens = [
-  'double',
-  'float',
-  'int8',
-  'int16',
-  'int32',
-  'uint8',
-  'unit16',
-  'uint32',
-  'char',
-  'string',
-];
-
-const tokensLE = tokens.map((token) => `${token}LE`);
-const tokensBE = tokens.map((token) => `${token}BE`);
+const tokensNE = binflow.TYPES; // tokens with No Endian
+const tokensLE = tokensNE.map((token) => `${token}LE`);
+const tokensBE = tokensNE.map((token) => `${token}BE`);
 // const tokensAll = [...tokens, ...tokensLE, ...tokensBE];
 
 describe('binflow', () => {
@@ -32,7 +20,7 @@ describe('binflow', () => {
     const _hasEndian = binflow.createBinflow()._hasEndian;
 
     it('should get false on normal tokens', () => {
-      tokens.forEach((token) => {
+      tokensNE.forEach((token) => {
         _hasEndian(token).should.be.false;
       });
     });
@@ -49,16 +37,16 @@ describe('binflow', () => {
     const _getType = binflow.createBinflow()._getType;
 
     it('should get token itself on normal tokens', () => {
-      tokens.forEach((token) => {
+      tokensNE.forEach((token) => {
         _getType(token).should.eql(token);
       });
     });
     it('should get types on endian-tailed tokens', () => {
       tokensLE.forEach((token, idx) => {
-        _getType(token).should.eql(tokens[idx]);
+        _getType(token).should.eql(binflow.TYPES[idx]);
       });
       tokensBE.forEach((token, idx) => {
-        _getType(token).should.eql(tokens[idx]);
+        _getType(token).should.eql(binflow.TYPES[idx]);
       });
     });
   });
