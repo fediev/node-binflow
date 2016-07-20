@@ -208,6 +208,27 @@ describe('binflow', () => {
     });
   });
 
+  describe('_getValueSize()', () => {
+    const _getValueSize = binflow._getValueSize;
+
+    it('should get value size of normal tokens', () => {
+      const keys = Object.keys(binflow.VALUE_SIZE);
+      keys.map((key, idx) =>
+        _getValueSize(tokensNE[idx]).should.eql(binflow.VALUE_SIZE[key]));
+    });
+    it('should get value size of LE tokens', () => {
+      const keys = Object.keys(binflow.VALUE_SIZE);
+      keys.map((key, idx) =>
+        _getValueSize(tokensLE[idx]).should.eql(binflow.VALUE_SIZE[key]));
+    });
+    it('should get value size of BE tokens', () => {
+      const keys = Object.keys(binflow.VALUE_SIZE);
+      keys.map((key, idx) =>
+        _getValueSize(tokensBE[idx]).should.eql(binflow.VALUE_SIZE[key]));
+    });
+  });
+
+  // ---------------------------------------------------------------------------
   describe('#_parseStringToken()', () => {
     it('should')
   });
