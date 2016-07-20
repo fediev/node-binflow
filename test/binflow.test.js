@@ -11,7 +11,7 @@ const tokensBE = tokensNE.map((token) => `${token}BE`);
 const buf1234 = Buffer.from('0102030405060708090a', 'hex');
 const bufffff = Buffer.from('ffffffffffffffff', 'hex');
 
-describe('binflow', () => {
+describe('Binflow', () => {
   describe('createBinflow()', () => {
     it('should create a binflow object', () => {
       const result = binflow.createBinflow();
