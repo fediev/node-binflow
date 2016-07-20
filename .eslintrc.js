@@ -310,7 +310,7 @@ module.exports = {
     'prefer-reflect': 'off',
     'prefer-rest-params': 'warn',
     'prefer-spread': 'warn',
-    'prefer-template': 'warn',
+    'prefer-template': 'off',
     'require-yield': 'error',
     'rest-spread-spacing': ['error', 'never'],
     'sort-imports': 'off',
