@@ -13,9 +13,36 @@ const bufffff = Buffer.from('ffffffffffffffff', 'hex');
 
 describe('Binflow', () => {
   describe('createBinflow()', () => {
-    it('should create a binflow object', () => {
+    const validStru = {
+      prop1: 'int8',
+      prop2: ['uint8', 5],
+      prop3: {
+        subprop1: 'int32',
+      },
+    };
+
+    it('should create a binflow object with no params', () => {
       const result = binflow.createBinflow();
-      result.should.be.an('object');
+      result.should.respondTo('struct');
+    });
+    it('should create a binflow object on valid structure', () => {
+      const result = binflow.createBinflow(validStru);
+      result.should.respondTo('parse');
+    });
+    it('should throw on invalid structure', () => {
+      const stru = {
+        prop1: '_INVALID_TOKEN_',
+      };
+      const fn = () => binflow.createBinflow(stru);
+      fn.should.throw();
+    });
+    it('should create a binflow object on valid endian', () => {
+      binflow.createBinflow(validStru, 'LE').should.respondTo('parse', 'LE');
+      binflow.createBinflow(validStru, 'BE').should.respondTo('parse', 'BE');
+    });
+    it('should throw on invalid endian', () => {
+      const fn = () => binflow.createBinflow(validStru, '_NE_');
+      fn.should.throw();
     });
   });
 
