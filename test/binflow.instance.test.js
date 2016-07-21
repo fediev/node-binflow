@@ -23,6 +23,82 @@ describe('binflow instance', () => {
     });
   });
 
+  describe('struct()', () => {
+    it('should reset structure of binflow', () => {
+      const stru = {
+        prop1: 'uint32',
+        prop2: 'uint8',
+        prop3: 'uint16',
+      };
+      const expected = {
+        prop1: 0x04030201,
+        prop2: 0x05,
+        prop3: 0x0706,
+      };
+      const bnf = binflow.createBinflow(stru);
+      bnf.parse(buf1234).should.eql(expected);
+      const stru2 = {
+        prop1: 'uint16',
+        prop2: 'uint32',
+        prop3: 'uint8',
+      };
+      const expected2 = {
+        prop1: 0x0201,
+        prop2: 0x06050403,
+        prop3: 0x07,
+      };
+      bnf.struct(stru2);
+      bnf.parse(buf1234).should.eql(expected2);
+    });
+    it('should reset endian of binflow', () => {
+      const stru = {
+        prop1: 'uint32',
+        prop2: 'uint8',
+        prop3: 'uint16',
+      };
+      const expectedLE = {
+        prop1: 0x04030201,
+        prop2: 0x05,
+        prop3: 0x0706,
+      };
+      const expectedBE = {
+        prop1: 0x01020304,
+        prop2: 0x05,
+        prop3: 0x0607,
+      };
+      const bnf = binflow.createBinflow(stru, 'LE');
+      bnf.parse(buf1234).should.eql(expectedLE);
+      bnf.struct(stru, 'BE');
+      bnf.parse(buf1234).should.eql(expectedBE);
+    });
+    it('should preserve endian of binflow with no endian', () => {
+      const stru = {
+        prop1: 'uint32',
+        prop2: 'uint8',
+        prop3: 'uint16',
+      };
+      const expected = {
+        prop1: 0x01020304,
+        prop2: 0x05,
+        prop3: 0x0607,
+      };
+      const bnf = binflow.createBinflow(stru, 'BE');
+      bnf.parse(buf1234).should.eql(expected);
+      const stru2 = {
+        prop1: 'uint16',
+        prop2: 'uint32',
+        prop3: 'uint8',
+      };
+      const expected2 = {
+        prop1: 0x0102,
+        prop2: 0x03040506,
+        prop3: 0x07,
+      };
+      bnf.struct(stru2);
+      bnf.parse(buf1234).should.eql(expected2);
+    });
+  });
+
   describe('parse()', () => {
     it('should parse on one string token', () => {
       const stru = {
