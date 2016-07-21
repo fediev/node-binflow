@@ -4,6 +4,7 @@ const chai = require('chai');
 const should = chai.should();
 const binflow = require('../lib/binflow');
 
+const buf12 = Buffer.from('0102', 'hex');
 const buf1234 = Buffer.from('0102030405060708090a', 'hex');
 const bufffff = Buffer.from('ffffffffffffffff', 'hex');
 
@@ -78,6 +79,14 @@ describe('binflow instance', () => {
       const bnf = binflow.createBinflow(stru, 'BE');
       const result = bnf.parse(buf1234);
       result.should.eql(expected);
+    });
+    it('should throw RangeError when buf is not enough', () => {
+      const stru = {
+        prop1: 'uint32',
+      };
+      const bnf = binflow.createBinflow(stru);
+      const doTest = () => bnf.parse(buf12);
+      doTest.should.throw(RangeError);
     });
   });
 });

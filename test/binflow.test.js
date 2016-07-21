@@ -8,6 +8,7 @@ const tokensNE = binflow.TYPES; // tokens with No Endian
 const tokensLE = tokensNE.map((token) => `${token}LE`);
 const tokensBE = tokensNE.map((token) => `${token}BE`);
 // const tokensAll = [...tokens, ...tokensLE, ...tokensBE];
+const buf12 = Buffer.from('0102', 'hex');
 const buf1234 = Buffer.from('0102030405060708090a', 'hex');
 const bufffff = Buffer.from('ffffffffffffffff', 'hex');
 
@@ -357,6 +358,11 @@ describe('Binflow', () => {
     it('should read `doubleBE`', () => {
       const token = 'doubleBE';
       doFloatDoubleTest(token, 'BE', 'BE', 'BE');
+    });
+
+    it('should throw RangeError when buf is not enough', () => {
+      const doTest = () => _readByToken(buf12, 0, 'uint32');
+      doTest.should.throw(RangeError);
     });
   });
 
