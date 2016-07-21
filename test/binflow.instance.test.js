@@ -8,6 +8,20 @@ const buf1234 = Buffer.from('0102030405060708090a', 'hex');
 const bufffff = Buffer.from('ffffffffffffffff', 'hex');
 
 describe('binflow instance', () => {
+  describe('setEndian', () => {
+    const bnf = binflow.createBinflow();
+    // eslint-disable-next-line no-extra-parens
+    const doTest = (endian) => (() => bnf.setEndian(endian));
+
+    it('should not throw on valid endian', () => {
+      doTest('LE').should.not.throw();
+      doTest('BE').should.not.throw();
+    });
+    it('should throw on wrong endian', () => {
+      doTest('_INVALID_ENDIAN_').should.throw('WRONG_ENDIAN');
+    });
+  });
+
   describe('parse()', () => {
     it('should parse on one string token', () => {
       const stru = {
