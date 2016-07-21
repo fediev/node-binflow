@@ -117,4 +117,23 @@ describe('binflow instance', () => {
       doTest.should.throw(RangeError);
     });
   });
+
+  describe('getConsumedBufferSize()', () => {
+    it('should get 0 on new binflow object', () => {
+      const bnf = binflow.createBinflow();
+      const result = bnf.getConsumedBufferSize();
+      result.should.eql(0);
+    });
+    it('should get the number of consumed buffer size', () => {
+      const stru = {
+        prop1: 'uint8',
+        prop2: 'uint16',
+        prop3: ['int16', 2],
+      };
+      const bnf = binflow.createBinflow(stru);
+      bnf.parse(buf1234);
+      const result = bnf.getConsumedBufferSize();
+      result.should.eql(7);
+    });
+  });
 });
