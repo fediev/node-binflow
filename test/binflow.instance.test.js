@@ -108,6 +108,48 @@ describe('binflow instance', () => {
       result.should.eql(expected);
     });
 
+    it('should parse `byte` array token', () => {
+      const stru = {
+        prop1: 'int8',
+        prop2: ['byte', 4],
+        prop3: 'int8',
+      };
+      const expected = {
+        prop1: 0x01,
+        prop2: Buffer.from('02030405', 'hex'),
+        prop3: 0x06,
+      };
+      binflow.createBinflow(stru).parse(buf1234)
+        .should.eql(expected, 'NE');
+      binflow.createBinflow(stru, 'LE').parse(buf1234)
+        .should.eql(expected, 'LE');
+      binflow.createBinflow(stru, 'BE').parse(buf1234)
+        .should.eql(expected, 'BE');
+    });
+
+    it('should parse `string` array token', () => {
+      const str = 'STRING 문자열 123!@#';
+      const strBuf = Buffer.from(str, 'utf8');
+      const buf = Buffer.concat([
+        Buffer.from('01', 'hex'),
+        strBuf,
+        Buffer.from('02', 'hex'),
+      ]);
+      const stru = {
+        prop1: 'int8',
+        prop2: ['string', strBuf.length],
+        prop3: 'int8',
+      };
+      const expected = {
+        prop1: 0x01,
+        prop2: str,
+        prop3: 0x02,
+      };
+      binflow.createBinflow(stru).parse(buf).should.eql(expected, 'NE');
+      binflow.createBinflow(stru, 'LE').parse(buf).should.eql(expected, 'LE');
+      binflow.createBinflow(stru, 'BE').parse(buf).should.eql(expected, 'BE');
+    });
+
     it('should parse on object token', () => {
       const stru = {
         prop1: {
