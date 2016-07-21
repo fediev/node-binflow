@@ -108,6 +108,45 @@ describe('binflow instance', () => {
       result.should.eql(expected);
     });
 
+    it('should parse on object token', () => {
+      const stru = {
+        prop1: {
+          subprop1: 'uint16',
+          subprop2: 'uint8',
+        },
+      };
+      const expected = {
+        prop1: {
+          subprop1: 0x0201,
+          subprop2: 0x03,
+        },
+      };
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.parse(buf1234);
+      result.should.eql(expected);
+    });
+    it('should parse on object token with string token', () => {
+      const stru = {
+        prop1: 'uint8',
+        prop2: {
+          subprop1: 'uint16',
+          subprop2: 'uint8',
+        },
+        prop3: 'uint8',
+      };
+      const expected = {
+        prop1: 0x01,
+        prop2: {
+          subprop1: 0x0302,
+          subprop2: 0x04,
+        },
+        prop3: 0x05,
+      };
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.parse(buf1234);
+      result.should.eql(expected);
+    });
+
     it('should throw RangeError when buf is not enough', () => {
       const stru = {
         prop1: 'uint32',
