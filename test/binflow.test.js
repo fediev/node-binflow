@@ -55,6 +55,130 @@ describe('Binflow', () => {
     });
   });
 
+  describe('_validateStructure()', () => {
+    const _validateStructure = binflow._validateStructure;
+
+    it('should return true on a valid structure', () => {
+      const stru = {
+        prop1: 'int8',
+        prop2: 'uint16LE',
+        prop3: ['uint32BE', 3],
+      };
+      const result = _validateStructure(stru);
+      result.should.be.true;
+    });
+
+    it('should return true on a valid string token', () => {
+      const stru = {
+        prop1: 'int8',
+      };
+      const result = _validateStructure(stru);
+      result.should.be.true;
+    });
+    it('should throw on wrong string token', () => {
+      const stru = {
+        prop1: '_INVALID_TOKEN_',
+      };
+      const fn = () => _validateStructure(stru);
+      fn.should.throw();
+    });
+    it('should throw on `byte` string token', () => {
+      const stru = {
+        prop1: 'byte',
+      };
+      const fn = () => _validateStructure(stru);
+      fn.should.throw();
+    });
+    it('should throw on `string` string token', () => {
+      const stru = {
+        prop1: 'string',
+      };
+      const fn = () => _validateStructure(stru);
+      fn.should.throw();
+    });
+
+    it('should return true on a valid array token', () => {
+      const stru = {
+        prop1: ['int8', 10],
+      };
+      const result = _validateStructure(stru);
+      result.should.be.true;
+    });
+    it('should throw on wrong array token', () => {
+      const stru = {
+        prop1: ['_INVALID_TOKEN_', 10],
+      };
+      const fn = () => _validateStructure(stru);
+      fn.should.throw();
+    });
+    it('should throw on wrong array count', () => {
+      const stru = {
+        prop1: ['int8', '_NOT_NUMBER_'],
+      };
+      const fn = () => _validateStructure(stru);
+      fn.should.throw();
+    });
+    it('should throw on wrong array token without count', () => {
+      const stru = {
+        prop1: ['int8'],
+      };
+      const fn = () => _validateStructure(stru);
+      fn.should.throw();
+    });
+
+    it('should return true on valid object token', () => {
+      const stru = {
+        prop1: {
+          subprop1: 'int8',
+          subprop2: ['uint8', 10],
+        },
+      };
+      const result = _validateStructure(stru);
+      result.should.be.true;
+    });
+    it('should return true on nested object token', () => {
+      const stru = {
+        prop1: {
+          subprop1: {
+            aa: 'int8',
+            bb: ['uint8', 10],
+          },
+        },
+      };
+      const result = _validateStructure(stru);
+      result.should.be.true;
+    });
+
+    it('should throw on invalid object token', () => {
+      const stru = {
+        prop1: {
+          subprop1: '_INVALID_TOKEN_',
+        },
+      };
+      const fn = () => _validateStructure(stru);
+      fn.should.throw();
+    });
+    it('should throw on invalid nested object token', () => {
+      const stru = {
+        prop1: {
+          subprop1: {
+            aa: '_INVALID_TOKEN_',
+          },
+        },
+      };
+      const fn = () => _validateStructure(stru);
+      fn.should.throw();
+    });
+
+    it('should throw on not supporte token type', () => {
+      const stru = {
+        prop1: 1,
+      };
+      const fn = () => _validateStructure(stru);
+      fn.should.throw();
+    });
+  });
+
   // eslint-disable-next-line max-statements
   describe('_readByToken()', () => {
     const _readByToken = binflow._readByToken;
