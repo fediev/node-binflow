@@ -436,4 +436,30 @@ describe('Binflow', () => {
       result.offset.should.eql(52, 'offset');
     });
   });
+
+  describe('_getStructureSize()', () => {
+    it('should get structure byte size', () => {
+      const stru = {
+        prop1: 'int8',                // 1
+        prop2: 'int32LE',             // 4
+        prop3: ['int16BE', 4],        // 8 = 2 * 4
+        prop4: ['byte', 12],          // 12 = 1 * 12
+        prop5: {
+          subprop1: 'uint8',          // 1
+          subprop2: ['string', 20],   // 20 = 1 * 20
+          subprop3: 'uint16LE',       // 2
+          subprop4: {
+            subsubprop1: 'int32',     // 4
+            subsubprop2: 'uint16LE',  // 2
+          },
+        },
+        prop6: 'uint32',              // 4
+      };
+      binflow._getStructureSize(stru).should.eql(58);
+    });
+    it('should get 0 on empty structure', () => {
+      const stru = {};
+      binflow._getStructureSize(stru).should.eql(0);
+    });
+  });
 });
