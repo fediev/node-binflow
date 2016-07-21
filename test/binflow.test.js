@@ -385,4 +385,55 @@ describe('Binflow', () => {
         _getValueSize(tokensBE[idx]).should.eql(binflow.VALUE_SIZE[key]));
     });
   });
+
+  describe('_getTokenOffsetOfField()', () => {
+    const _getTokenOffsetOfField = binflow._getTokenOffsetOfField;
+    const stru = {
+      prop1: 'int8',                // 1
+      prop2: 'int32LE',             // 4
+      prop3: ['int16BE', 4],        // 8 = 2 * 4
+      prop4: ['byte', 12],          // 12 = 1 * 12
+      prop5: {
+        subprop1: 'uint8',          // 1
+        subprop2: ['string', 20],   // 20 = 1 * 20
+        subprop3: 'uint16LE',       // 2
+        subprop4: {
+          subsubprop1: 'int32',     // 4
+          subsubprop2: 'uint16LE',  // 2
+        },
+      },
+      prop6: 'uint32',              // 4
+    };
+
+    it('should get info of string token field', () => {
+      const field = 'prop2';
+      const result = _getTokenOffsetOfField(stru, field);
+      result.token.should.eql(stru[field], 'token');
+      result.offset.should.eql(1, 'offset');
+    });
+    it('should get info of array token field', () => {
+      const field = 'prop3';
+      const result = _getTokenOffsetOfField(stru, field);
+      result.token.should.eql(stru[field], 'token');
+      result.offset.should.eql(5, 'offset');
+    });
+    it('should get info of object token field', () => {
+      const field = 'prop5';
+      const result = _getTokenOffsetOfField(stru, field);
+      result.token.should.eql(stru[field], 'token');
+      result.offset.should.eql(25, 'offset');
+    });
+    it('should get info of sub field', () => {
+      const field = 'subprop3';
+      const result = _getTokenOffsetOfField(stru, field);
+      result.token.should.eql(stru.prop5[field], 'token');
+      result.offset.should.eql(46, 'offset');
+    });
+    it('should get info of sub sub field', () => {
+      const field = 'subsubprop2';
+      const result = _getTokenOffsetOfField(stru, field);
+      result.token.should.eql(stru.prop5.subprop4[field], 'token');
+      result.offset.should.eql(52, 'offset');
+    });
+  });
 });
