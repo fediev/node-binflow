@@ -417,6 +417,47 @@ describe('binflow instance', () => {
       const bnf = binflow.createBinflow(stru);
       bnf.encode(value).should.eql(expected);
     });
+
+    it('should encode object token', () => {
+      const stru = {
+        prop1: {
+          subprop1: 'uint16',
+          subprop2: 'uint8',
+        },
+      };
+      const value = {
+        prop1: {
+          subprop1: 0x0102,
+          subprop2: 0x03,
+        },
+      };
+      const expected = Buffer.from('020103', 'hex');
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.encode(value);
+      result.should.eql(expected);
+    });
+    it('should encode object token with string token', () => {
+      const stru = {
+        prop1: 'uint8',
+        prop2: {
+          subprop1: 'uint16',
+          subprop2: 'uint8',
+        },
+        prop3: 'uint8',
+      };
+      const value = {
+        prop1: 0x01,
+        prop2: {
+          subprop1: 0x0203,
+          subprop2: 0x04,
+        },
+        prop3: 0x05,
+      };
+      const expected = Buffer.from('0103020405', 'hex');
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.encode(value);
+      result.should.eql(expected);
+    });
   });
 
   describe('getConsumedBufferSize()', () => {
