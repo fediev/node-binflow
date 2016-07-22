@@ -275,6 +275,83 @@ describe('binflow instance', () => {
     });
   });
 
+  describe('encode()', () => {
+    it('should encode single string token', () => {
+      const stru = {
+        prop1: 'uint32',
+      };
+      const value = {
+        prop1: 1,
+      };
+      const expected = Buffer.from('01000000', 'hex');
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.encode(value);
+      result.should.eql(expected);
+    });
+    it('should encode multi string token', () => {
+      const stru = {
+        prop1: 'uint16',
+        prop2: 'int16LE',
+        prop3: 'uint32BE',
+      };
+      const value = {
+        prop1: 1,
+        prop2: 2,
+        prop3: 3,
+      };
+      const expected = Buffer.from('0100020000000003', 'hex');
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.encode(value);
+      result.should.eql(expected);
+    });
+    it('should encode multi string token with LE', () => {
+      const stru = {
+        prop1: 'uint16',
+        prop2: 'int16LE',
+        prop3: 'uint32BE',
+      };
+      const value = {
+        prop1: 1,
+        prop2: 2,
+        prop3: 3,
+      };
+      const expected = Buffer.from('0100020000000003', 'hex');
+      const bnf = binflow.createBinflow(stru, 'LE');
+      const result = bnf.encode(value);
+      result.should.eql(expected);
+    });
+    it('should encode multi string token with BE', () => {
+      const stru = {
+        prop1: 'uint16',
+        prop2: 'int16LE',
+        prop3: 'uint32BE',
+      };
+      const value = {
+        prop1: 1,
+        prop2: 2,
+        prop3: 3,
+      };
+      const expected = Buffer.from('0001020000000003', 'hex');
+      const bnf = binflow.createBinflow(stru, 'BE');
+      const result = bnf.encode(value);
+      result.should.eql(expected);
+    });
+    it('should encode -1 correctly', () => {
+      const stru = {
+        prop1: 'int8',
+        prop2: 'uint8',
+      };
+      const value = {
+        prop1: -1,
+        prop2: 255,
+      };
+      const expected = Buffer.from('ffff', 'hex');
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.encode(value);
+      result.should.eql(expected);
+    });
+  });
+
   describe('getConsumedBufferSize()', () => {
     it('should get 0 on new binflow object', () => {
       const bnf = binflow.createBinflow();
