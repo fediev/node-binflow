@@ -379,6 +379,44 @@ describe('binflow instance', () => {
       const result = bnf.encode(value);
       result.should.eql(expected);
     });
+
+    it('should encode `byte` array token', () => {
+      const stru = {
+        prop1: 'int8',
+        prop2: ['byte', 4],
+        prop3: 'int8',
+      };
+      const value = {
+        prop1: 1,
+        prop2: Buffer.from('02030405', 'hex'),
+        prop3: 6,
+      };
+      const expected = Buffer.from('010203040506', 'hex');
+      const bnf = binflow.createBinflow(stru);
+      bnf.encode(value).should.eql(expected);
+    });
+
+    it('should encode `string` array token', () => {
+      const str = 'STRING 문자열 123!@#';
+      const strBuf = Buffer.from(str, 'utf8');
+      const stru = {
+        prop1: 'int8',
+        prop2: ['string', strBuf.length],
+        prop3: 'int8',
+      };
+      const value = {
+        prop1: 1,
+        prop2: str,
+        prop3: 2,
+      };
+      const expected = Buffer.concat([
+        Buffer.from('01', 'hex'),
+        strBuf,
+        Buffer.from('02', 'hex'),
+      ]);
+      const bnf = binflow.createBinflow(stru);
+      bnf.encode(value).should.eql(expected);
+    });
   });
 
   describe('getConsumedBufferSize()', () => {
