@@ -350,6 +350,35 @@ describe('binflow instance', () => {
       const result = bnf.encode(value);
       result.should.eql(expected);
     });
+
+    it('should encode array token', () => {
+      const stru = {
+        prop1: ['uint16', 2],
+      };
+      const value = {
+        prop1: [1, 2],
+      };
+      const expected = Buffer.from('01000200', 'hex');
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.encode(value);
+      result.should.eql(expected);
+    });
+    it('should encode array token with string token', () => {
+      const stru = {
+        prop1: 'uint8',
+        prop2: ['uint16', 2],
+        prop3: 'uint8',
+      };
+      const value = {
+        prop1: 1,
+        prop2: [2, 3],
+        prop3: 4,
+      };
+      const expected = Buffer.from('010200030004', 'hex');
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.encode(value);
+      result.should.eql(expected);
+    });
   });
 
   describe('getConsumedBufferSize()', () => {
