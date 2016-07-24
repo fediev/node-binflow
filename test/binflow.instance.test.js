@@ -280,12 +280,12 @@ describe('binflow instance', () => {
       const stru = {
         prop1: 'uint32',
       };
-      const value = {
+      const values = {
         prop1: 1,
       };
       const expected = Buffer.from('01000000', 'hex');
       const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(value);
+      const result = bnf.encode(values);
       result.should.eql(expected);
     });
     it('should encode multi string token', () => {
@@ -294,14 +294,14 @@ describe('binflow instance', () => {
         prop2: 'int16LE',
         prop3: 'uint32BE',
       };
-      const value = {
+      const values = {
         prop1: 1,
         prop2: 2,
         prop3: 3,
       };
       const expected = Buffer.from('0100020000000003', 'hex');
       const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(value);
+      const result = bnf.encode(values);
       result.should.eql(expected);
     });
     it('should encode multi string token with LE', () => {
@@ -310,14 +310,14 @@ describe('binflow instance', () => {
         prop2: 'int16LE',
         prop3: 'uint32BE',
       };
-      const value = {
+      const values = {
         prop1: 1,
         prop2: 2,
         prop3: 3,
       };
       const expected = Buffer.from('0100020000000003', 'hex');
       const bnf = binflow.createBinflow(stru, 'LE');
-      const result = bnf.encode(value);
+      const result = bnf.encode(values);
       result.should.eql(expected);
     });
     it('should encode multi string token with BE', () => {
@@ -326,14 +326,14 @@ describe('binflow instance', () => {
         prop2: 'int16LE',
         prop3: 'uint32BE',
       };
-      const value = {
+      const values = {
         prop1: 1,
         prop2: 2,
         prop3: 3,
       };
       const expected = Buffer.from('0001020000000003', 'hex');
       const bnf = binflow.createBinflow(stru, 'BE');
-      const result = bnf.encode(value);
+      const result = bnf.encode(values);
       result.should.eql(expected);
     });
     it('should encode -1 correctly', () => {
@@ -341,13 +341,13 @@ describe('binflow instance', () => {
         prop1: 'int8',
         prop2: 'uint8',
       };
-      const value = {
+      const values = {
         prop1: -1,
         prop2: 255,
       };
       const expected = Buffer.from('ffff', 'hex');
       const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(value);
+      const result = bnf.encode(values);
       result.should.eql(expected);
     });
 
@@ -355,12 +355,12 @@ describe('binflow instance', () => {
       const stru = {
         prop1: ['uint16', 2],
       };
-      const value = {
+      const values = {
         prop1: [1, 2],
       };
       const expected = Buffer.from('01000200', 'hex');
       const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(value);
+      const result = bnf.encode(values);
       result.should.eql(expected);
     });
     it('should encode array token with string token', () => {
@@ -369,14 +369,14 @@ describe('binflow instance', () => {
         prop2: ['uint16', 2],
         prop3: 'uint8',
       };
-      const value = {
+      const values = {
         prop1: 1,
         prop2: [2, 3],
         prop3: 4,
       };
       const expected = Buffer.from('010200030004', 'hex');
       const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(value);
+      const result = bnf.encode(values);
       result.should.eql(expected);
     });
 
@@ -386,14 +386,14 @@ describe('binflow instance', () => {
         prop2: ['byte', 4],
         prop3: 'int8',
       };
-      const value = {
+      const values = {
         prop1: 1,
         prop2: Buffer.from('02030405', 'hex'),
         prop3: 6,
       };
       const expected = Buffer.from('010203040506', 'hex');
       const bnf = binflow.createBinflow(stru);
-      bnf.encode(value).should.eql(expected);
+      bnf.encode(values).should.eql(expected);
     });
 
     it('should encode `string` array token', () => {
@@ -404,7 +404,7 @@ describe('binflow instance', () => {
         prop2: ['string', strBuf.length],
         prop3: 'int8',
       };
-      const value = {
+      const values = {
         prop1: 1,
         prop2: str,
         prop3: 2,
@@ -415,7 +415,7 @@ describe('binflow instance', () => {
         Buffer.from('02', 'hex'),
       ]);
       const bnf = binflow.createBinflow(stru);
-      bnf.encode(value).should.eql(expected);
+      bnf.encode(values).should.eql(expected);
     });
 
     it('should encode object token', () => {
@@ -425,7 +425,7 @@ describe('binflow instance', () => {
           subprop2: 'uint8',
         },
       };
-      const value = {
+      const values = {
         prop1: {
           subprop1: 0x0102,
           subprop2: 0x03,
@@ -433,7 +433,7 @@ describe('binflow instance', () => {
       };
       const expected = Buffer.from('020103', 'hex');
       const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(value);
+      const result = bnf.encode(values);
       result.should.eql(expected);
     });
     it('should encode object token with string token', () => {
@@ -445,7 +445,7 @@ describe('binflow instance', () => {
         },
         prop3: 'uint8',
       };
-      const value = {
+      const values = {
         prop1: 0x01,
         prop2: {
           subprop1: 0x0203,
@@ -455,7 +455,7 @@ describe('binflow instance', () => {
       };
       const expected = Buffer.from('0103020405', 'hex');
       const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(value);
+      const result = bnf.encode(values);
       result.should.eql(expected);
     });
   });
