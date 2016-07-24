@@ -15,14 +15,14 @@
     "test": "mocha test/**/*.test.js",
     "test:watch": "npm run test -- --watch"
   },
-  "author": "flyingloft",
+  "author": "fediev",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/flyingloft/node-binflow.git"
+    "url": "git+ssh://git@github.com/fediev/node-binflow.git"
   },
   "bugs": {
-    "url": "https://gitlab.com/flyingloft/node-binflow/issues"
+    "url": "https://github.com/fediev/node-binflow/issues"
   },
-  "homepage": "https://gitlab.com/flyingloft/node-binflow#README"
+  "homepage": "https://github.com/fediev/node-binflow#readme"
 }
