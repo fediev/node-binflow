@@ -510,6 +510,52 @@ describe('binflow instance', () => {
     });
   });
 
+  describe('get()', () => {
+    const stru = {
+      prop1: 'int16',
+      prop2: ['int16LE', 3],
+      prop3: 'int32BE',
+      prop4: {
+        subprop1: 'int16',
+        subprop2: 'int8',
+      },
+      prop5: 'int8',
+    };
+    const bnf = binflow.createBinflow(stru);
+
+    it('should get string field', () => {
+      const field = 'prop3';
+      const buf = Buffer.from('ffffffffffffffff00000001ffffffff', 'hex');
+      const expected = 0x01;
+      const result = bnf.get(buf, field);
+      result.should.eql(expected);
+    });
+    it('should get array field', () => {
+      const field = 'prop2';
+      const buf = Buffer.from('ffff010002000300ffffffffffffffff', 'hex');
+      const expected = [0x01, 0x02, 0x03];
+      const result = bnf.get(buf, field);
+      result.should.eql(expected);
+    });
+    it('should get object field', () => {
+      const field = 'prop4';
+      const buf = Buffer.from('ffffffffffffffffffffffff010002ff', 'hex');
+      const expected = {
+        subprop1: 0x01,
+        subprop2: 0x02,
+      };
+      const result = bnf.get(buf, field);
+      result.should.eql(expected);
+    });
+    it('should get object sub field', () => {
+      const field = 'subprop2';
+      const buf = Buffer.from('ffffffffffffffffffffffffffff01ff', 'hex');
+      const expected = 0x01;
+      const result = bnf.get(buf, field);
+      result.should.eql(expected);
+    });
+  });
+
   describe('getConsumedBufferSize()', () => {
     it('should get 0 on new binflow object', () => {
       const bnf = binflow.createBinflow();
