@@ -1,7 +1,7 @@
 {
-  "name": "node-binflow",
-  "version": "1.0.0",
-  "description": "node buffer parser and encoder",
+  "name": "binflow",
+  "version": "1.0.1",
+  "description": "buffer parser and encoder",
   "main": "index.js",
   "directories": {
     "test": "test"
