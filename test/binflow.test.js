@@ -209,15 +209,15 @@ describe('Binflow', () => {
   });
 
   // eslint-disable-next-line max-statements
-  describe('_readByToken()', () => {
-    const _readByToken = binflow._readByToken;
+  describe('_readByType()', () => {
+    const _readByType = binflow._readByType;
 
     const doIntTest = (token) => {
       const result = [];
-      result.push(_readByToken(buf1234, 0, token));
-      result.push(_readByToken(buf1234, 1, token, 'LE'));
-      result.push(_readByToken(buf1234, 1, token, 'BE'));
-      result.push(_readByToken(bufffff, 0, token));
+      result.push(_readByType(buf1234, 0, token));
+      result.push(_readByType(buf1234, 1, token, 'LE'));
+      result.push(_readByType(buf1234, 1, token, 'BE'));
+      result.push(_readByType(bufffff, 0, token));
       return result;
     };
 
@@ -328,11 +328,11 @@ describe('Binflow', () => {
         bufs.BE.writeDoubleBE(value);
       }
 
-      _readByToken(bufs[exp1], 0, token).should.be
+      _readByType(bufs[exp1], 0, token).should.be
         .within(value - margin, value + margin, 'without endian');
-      _readByToken(bufs[exp2], 0, token, 'LE').should.be
+      _readByType(bufs[exp2], 0, token, 'LE').should.be
         .within(value - margin, value + margin, 'with LE');
-      _readByToken(bufs[exp3], 0, token, 'BE').should.be
+      _readByType(bufs[exp3], 0, token, 'BE').should.be
         .within(value - margin, value + margin, 'with BE');
     };
 
@@ -362,14 +362,14 @@ describe('Binflow', () => {
     });
 
     it('should throw RangeError when buf is not enough', () => {
-      const doTest = () => _readByToken(buf12, 0, 'uint32');
+      const doTest = () => _readByType(buf12, 0, 'uint32');
       doTest.should.throw(RangeError);
     });
   });
 
   // eslint-disable-next-line max-statements
-  describe('_writeByToken()', () => {
-    const _writeByToken = binflow._writeByToken;
+  describe('_writeByType()', () => {
+    const _writeByType = binflow._writeByType;
 
     const doIntTest = (token, expecteds) => {
       const vals = [0, 1, 2, -1];
@@ -382,7 +382,7 @@ describe('Binflow', () => {
         const buf = Buffer.from(bufffff);
         const offset = offsets[idx];
         const endian = endians[idx];
-        _writeByToken(val, buf, offset, token, endian);
+        _writeByType(val, buf, offset, token, endian);
         buf.should.be.eql(expected);
       });
     };
@@ -570,7 +570,7 @@ describe('Binflow', () => {
         const buf = Buffer.from(bufff12);
         const offset = offsets[idx];
         const endian = endians[idx];
-        _writeByToken(val, buf, offset, token, endian);
+        _writeByType(val, buf, offset, token, endian);
         buf.should.be.eql(expected, 'with endian' + endian);
       });
     };
