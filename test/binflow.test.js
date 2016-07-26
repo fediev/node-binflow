@@ -647,20 +647,40 @@ describe('Binflow', () => {
   describe('_getValueSize()', () => {
     const _getValueSize = binflow._getValueSize;
 
+    const sizes = {
+      int8: 1,
+      int16: 2,
+      int24: 3,
+      int32: 4,
+      int64: 8,
+      uint8: 1,
+      uint16: 2,
+      uint24: 3,
+      uint32: 4,
+      uint64: 8,
+      'float': 4,
+      'double': 8,
+      'byte': 1,
+      string: 1,
+    };
+
     it('should get value size of normal tokens', () => {
-      const keys = Object.keys(binflow.VALUE_SIZE);
-      keys.map((key, idx) =>
-        _getValueSize(tokensNE[idx]).should.eql(binflow.VALUE_SIZE[key]));
+      binflow.TYPES.forEach((type) => {
+        const token = type;
+        _getValueSize(token).should.eql(sizes[type]);
+      });
     });
     it('should get value size of LE tokens', () => {
-      const keys = Object.keys(binflow.VALUE_SIZE);
-      keys.map((key, idx) =>
-        _getValueSize(tokensLE[idx]).should.eql(binflow.VALUE_SIZE[key]));
+      binflow.TYPES.forEach((type) => {
+        const token = type + 'LE';
+        _getValueSize(token).should.eql(sizes[type]);
+      });
     });
     it('should get value size of BE tokens', () => {
-      const keys = Object.keys(binflow.VALUE_SIZE);
-      keys.map((key, idx) =>
-        _getValueSize(tokensBE[idx]).should.eql(binflow.VALUE_SIZE[key]));
+      binflow.TYPES.forEach((type) => {
+        const token = type + 'BE';
+        _getValueSize(token).should.eql(sizes[type]);
+      });
     });
   });
 
