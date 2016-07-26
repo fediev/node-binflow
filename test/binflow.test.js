@@ -51,17 +51,19 @@ describe('Binflow', () => {
   describe('_hasEndian()', () => {
     const _hasEndian = binflow._hasEndian;
 
-    it('should get false on normal tokens', () => {
-      typesNE.forEach((token) => {
-        _hasEndian(token).should.be.false;
+    it('should get false on NE types', () => {
+      typesNE.forEach((type) => {
+        _hasEndian(type).should.be.false;
       });
     });
-    it('should get true on endian-tailed tokens', () => {
-      typesLE.forEach((token) => {
-        _hasEndian(token).should.be.true;
+    it('should get true on LE types', () => {
+      typesLE.forEach((type) => {
+        _hasEndian(type).should.be.true;
       });
-      typesBE.forEach((token) => {
-        _hasEndian(token).should.be.true;
+    });
+    it('should get true on BE types', () => {
+      typesBE.forEach((type) => {
+        _hasEndian(type).should.be.true;
       });
     });
   });
@@ -69,17 +71,19 @@ describe('Binflow', () => {
   describe('_getNeType()', () => {
     const _getNeType = binflow._getNeType;
 
-    it('should get token itself on normal tokens', () => {
-      typesNE.forEach((token) => {
-        _getNeType(token).should.eql(token);
+    it('should get type on NE types', () => {
+      typesNE.forEach((type) => {
+        _getNeType(type).should.eql(type);
       });
     });
-    it('should get types on endian-tailed tokens', () => {
-      typesLE.forEach((token, idx) => {
-        _getNeType(token).should.eql(binflow.NE_TYPES[idx]);
+    it('should get types on LE types', () => {
+      typesLE.forEach((type, idx) => {
+        _getNeType(type).should.eql(binflow.NE_TYPES[idx]);
       });
-      typesBE.forEach((token, idx) => {
-        _getNeType(token).should.eql(binflow.NE_TYPES[idx]);
+    });
+    it('should get types on BE types', () => {
+      typesBE.forEach((type, idx) => {
+        _getNeType(type).should.eql(binflow.NE_TYPES[idx]);
       });
     });
   });
