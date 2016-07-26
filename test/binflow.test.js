@@ -66,20 +66,20 @@ describe('Binflow', () => {
     });
   });
 
-  describe('_getType()', () => {
-    const _getType = binflow._getType;
+  describe('_getNeType()', () => {
+    const _getNeType = binflow._getNeType;
 
     it('should get token itself on normal tokens', () => {
       tokensNE.forEach((token) => {
-        _getType(token).should.eql(token);
+        _getNeType(token).should.eql(token);
       });
     });
     it('should get types on endian-tailed tokens', () => {
       tokensLE.forEach((token, idx) => {
-        _getType(token).should.eql(binflow.NE_TYPES[idx]);
+        _getNeType(token).should.eql(binflow.NE_TYPES[idx]);
       });
       tokensBE.forEach((token, idx) => {
-        _getType(token).should.eql(binflow.NE_TYPES[idx]);
+        _getNeType(token).should.eql(binflow.NE_TYPES[idx]);
       });
     });
   });
