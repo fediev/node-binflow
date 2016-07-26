@@ -216,109 +216,109 @@ describe('Binflow', () => {
   describe('_readByType()', () => {
     const _readByType = binflow._readByType;
 
-    const doIntTest = (token) => {
+    const doIntTest = (type) => {
       const result = [];
-      result.push(_readByType(buf1234, 0, token));
-      result.push(_readByType(buf1234, 1, token, 'LE'));
-      result.push(_readByType(buf1234, 1, token, 'BE'));
-      result.push(_readByType(bufffff, 0, token));
+      result.push(_readByType(buf1234, 0, type));
+      result.push(_readByType(buf1234, 1, type, 'LE'));
+      result.push(_readByType(buf1234, 1, type, 'BE'));
+      result.push(_readByType(bufffff, 0, type));
       return result;
     };
 
     it('should read `int8`', () => {
-      const token = 'int8';
+      const type = 'int8';
       const expected = [0x01, 0x02, 0x02, -1];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `int8LE`', () => {
-      const token = 'int8LE';
+      const type = 'int8LE';
       const expected = [0x01, 0x02, 0x02, -1];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `int8BE`', () => {
-      const token = 'int8BE';
+      const type = 'int8BE';
       const expected = [0x01, 0x02, 0x02, -1];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `int16', () => {
-      const token = 'int16';
+      const type = 'int16';
       const expected = [0x0201, 0x0302, 0x0203, -1];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `int16LE', () => {
-      const token = 'int16LE';
+      const type = 'int16LE';
       const expected = [0x0201, 0x0302, 0x0302, -1];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `int16BE', () => {
-      const token = 'int16BE';
+      const type = 'int16BE';
       const expected = [0x0102, 0x0203, 0x0203, -1];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `int32', () => {
-      const token = 'int32';
+      const type = 'int32';
       const expected = [0x04030201, 0x05040302, 0x02030405, -1];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `int32LE', () => {
-      const token = 'int32LE';
+      const type = 'int32LE';
       const expected = [0x04030201, 0x05040302, 0x05040302, -1];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `int32BE', () => {
-      const token = 'int32BE';
+      const type = 'int32BE';
       const expected = [0x01020304, 0x02030405, 0x02030405, -1];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
 
     it('should read `uint8`', () => {
-      const token = 'uint8';
+      const type = 'uint8';
       const expected = [0x01, 0x02, 0x02, 0xff];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `uint8LE`', () => {
-      const token = 'uint8LE';
+      const type = 'uint8LE';
       const expected = [0x01, 0x02, 0x02, 0xff];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `uint8BE`', () => {
-      const token = 'uint8BE';
+      const type = 'uint8BE';
       const expected = [0x01, 0x02, 0x02, 0xff];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `uint16', () => {
-      const token = 'uint16';
+      const type = 'uint16';
       const expected = [0x0201, 0x0302, 0x0203, 0xffff];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `uint16LE', () => {
-      const token = 'uint16LE';
+      const type = 'uint16LE';
       const expected = [0x0201, 0x0302, 0x0302, 0xffff];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `uint16BE', () => {
-      const token = 'uint16BE';
+      const type = 'uint16BE';
       const expected = [0x0102, 0x0203, 0x0203, 0xffff];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `uint32', () => {
-      const token = 'uint32';
+      const type = 'uint32';
       const expected = [0x04030201, 0x05040302, 0x02030405, 0xffffffff];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `uint32LE', () => {
-      const token = 'uint32LE';
+      const type = 'uint32LE';
       const expected = [0x04030201, 0x05040302, 0x05040302, 0xffffffff];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
     it('should read `uint32BE', () => {
-      const token = 'uint32BE';
+      const type = 'uint32BE';
       const expected = [0x01020304, 0x02030405, 0x02030405, 0xffffffff];
-      doIntTest(token).should.eql(expected);
+      doIntTest(type).should.eql(expected);
     });
 
-    const doFloatDoubleTest = (token, exp1, exp2, exp3) => {
-      const bufSize = token.slice(0, 5) === 'float' ? 4 : 8;
+    const doFloatDoubleTest = (type, exp1, exp2, exp3) => {
+      const bufSize = type.slice(0, 5) === 'float' ? 4 : 8;
       const bufs = {};
       bufs.LE = Buffer.alloc(bufSize);
       bufs.BE = Buffer.alloc(bufSize);
@@ -332,37 +332,37 @@ describe('Binflow', () => {
         bufs.BE.writeDoubleBE(value);
       }
 
-      _readByType(bufs[exp1], 0, token).should.be
+      _readByType(bufs[exp1], 0, type).should.be
         .within(value - margin, value + margin, 'without endian');
-      _readByType(bufs[exp2], 0, token, 'LE').should.be
+      _readByType(bufs[exp2], 0, type, 'LE').should.be
         .within(value - margin, value + margin, 'with LE');
-      _readByType(bufs[exp3], 0, token, 'BE').should.be
+      _readByType(bufs[exp3], 0, type, 'BE').should.be
         .within(value - margin, value + margin, 'with BE');
     };
 
     it('should read `float`', () => {
-      const token = 'float';
-      doFloatDoubleTest(token, 'LE', 'LE', 'BE');
+      const type = 'float';
+      doFloatDoubleTest(type, 'LE', 'LE', 'BE');
     });
     it('should read `floatLE`', () => {
-      const token = 'floatLE';
-      doFloatDoubleTest(token, 'LE', 'LE', 'LE');
+      const type = 'floatLE';
+      doFloatDoubleTest(type, 'LE', 'LE', 'LE');
     });
     it('should read `floatBE`', () => {
-      const token = 'floatBE';
-      doFloatDoubleTest(token, 'BE', 'BE', 'BE');
+      const type = 'floatBE';
+      doFloatDoubleTest(type, 'BE', 'BE', 'BE');
     });
     it('should read `double`', () => {
-      const token = 'double';
-      doFloatDoubleTest(token, 'LE', 'LE', 'BE');
+      const type = 'double';
+      doFloatDoubleTest(type, 'LE', 'LE', 'BE');
     });
     it('should read `doubleLE`', () => {
-      const token = 'doubleLE';
-      doFloatDoubleTest(token, 'LE', 'LE', 'LE');
+      const type = 'doubleLE';
+      doFloatDoubleTest(type, 'LE', 'LE', 'LE');
     });
     it('should read `doubleBE`', () => {
-      const token = 'doubleBE';
-      doFloatDoubleTest(token, 'BE', 'BE', 'BE');
+      const type = 'doubleBE';
+      doFloatDoubleTest(type, 'BE', 'BE', 'BE');
     });
 
     it('should throw RangeError when buf is not enough', () => {
