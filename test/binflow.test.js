@@ -4,7 +4,7 @@ const chai = require('chai');
 const should = chai.should();
 const binflow = require('../lib/binflow');
 
-const tokensNE = binflow.TYPES; // tokens with No Endian
+const tokensNE = binflow.NE_TYPES; // tokens with No Endian
 const tokensLE = tokensNE.map((token) => `${token}LE`);
 const tokensBE = tokensNE.map((token) => `${token}BE`);
 // const tokensAll = [...tokens, ...tokensLE, ...tokensBE];
@@ -76,10 +76,10 @@ describe('Binflow', () => {
     });
     it('should get types on endian-tailed tokens', () => {
       tokensLE.forEach((token, idx) => {
-        _getType(token).should.eql(binflow.TYPES[idx]);
+        _getType(token).should.eql(binflow.NE_TYPES[idx]);
       });
       tokensBE.forEach((token, idx) => {
-        _getType(token).should.eql(binflow.TYPES[idx]);
+        _getType(token).should.eql(binflow.NE_TYPES[idx]);
       });
     });
   });
@@ -665,19 +665,19 @@ describe('Binflow', () => {
     };
 
     it('should get value size of normal tokens', () => {
-      binflow.TYPES.forEach((type) => {
+      binflow.NE_TYPES.forEach((type) => {
         const token = type;
         _getValueSize(token).should.eql(sizes[type]);
       });
     });
     it('should get value size of LE tokens', () => {
-      binflow.TYPES.forEach((type) => {
+      binflow.NE_TYPES.forEach((type) => {
         const token = type + 'LE';
         _getValueSize(token).should.eql(sizes[type]);
       });
     });
     it('should get value size of BE tokens', () => {
-      binflow.TYPES.forEach((type) => {
+      binflow.NE_TYPES.forEach((type) => {
         const token = type + 'BE';
         _getValueSize(token).should.eql(sizes[type]);
       });
