@@ -287,6 +287,21 @@ describe('Binflow', () => {
       const expected = [0x0102, 0x0203, 0x0203, -1];
       doIntTest(type).should.eql(expected);
     });
+    it('should read `int24', () => {
+      const type = 'int24';
+      const expected = [0x030201, 0x040302, 0x020304, -1];
+      doIntTest(type).should.eql(expected);
+    });
+    it('should read `int24LE', () => {
+      const type = 'int24LE';
+      const expected = [0x030201, 0x040302, 0x040302, -1];
+      doIntTest(type).should.eql(expected);
+    });
+    it('should read `int24BE', () => {
+      const type = 'int24BE';
+      const expected = [0x010203, 0x020304, 0x020304, -1];
+      doIntTest(type).should.eql(expected);
+    });
     it('should read `int32', () => {
       const type = 'int32';
       const expected = [0x04030201, 0x05040302, 0x02030405, -1];
@@ -302,7 +317,28 @@ describe('Binflow', () => {
       const expected = [0x01020304, 0x02030405, 0x02030405, -1];
       doIntTest(type).should.eql(expected);
     });
-
+    // buf.readIntLE, readIntBE supports up to 48 bits of accuracy
+    it('should read `int64', () => {
+      const type = 'int64';
+      const expected = [
+        0x0807060504030201, 0x0908070605040302, 0x0203040506070809,
+      ];
+      doIntTest(type).slice(0, 3).should.eql(expected);
+    });
+    it('should read `int64LE', () => {
+      const type = 'int64LE';
+      const expected = [
+        0x0807060504030201, 0x0908070605040302, 0x0908070605040302,
+      ];
+      doIntTest(type).slice(0, 3).should.eql(expected);
+    });
+    it('should read `int64BE', () => {
+      const type = 'int64BE';
+      const expected = [
+        0x0102030405060708, 0x0203040506070809, 0x0203040506070809,
+      ];
+      doIntTest(type).slice(0, 3).should.eql(expected);
+    });
     it('should read `uint8`', () => {
       const type = 'uint8';
       const expected = [0x01, 0x02, 0x02, 0xff];
@@ -333,6 +369,21 @@ describe('Binflow', () => {
       const expected = [0x0102, 0x0203, 0x0203, 0xffff];
       doIntTest(type).should.eql(expected);
     });
+    it('should read `uint24', () => {
+      const type = 'uint24';
+      const expected = [0x030201, 0x040302, 0x020304, 0xffffff];
+      doIntTest(type).should.eql(expected);
+    });
+    it('should read `uint24LE', () => {
+      const type = 'uint24LE';
+      const expected = [0x030201, 0x040302, 0x040302, 0xffffff];
+      doIntTest(type).should.eql(expected);
+    });
+    it('should read `uint24BE', () => {
+      const type = 'uint24BE';
+      const expected = [0x010203, 0x020304, 0x020304, 0xffffff];
+      doIntTest(type).should.eql(expected);
+    });
     it('should read `uint32', () => {
       const type = 'uint32';
       const expected = [0x04030201, 0x05040302, 0x02030405, 0xffffffff];
@@ -347,6 +398,28 @@ describe('Binflow', () => {
       const type = 'uint32BE';
       const expected = [0x01020304, 0x02030405, 0x02030405, 0xffffffff];
       doIntTest(type).should.eql(expected);
+    });
+    // buf.readIntLE, readIntBE supports up to 48 bits of accuracy
+    it('should read `uint64', () => {
+      const type = 'uint64';
+      const expected = [
+        0x0807060504030201, 0x0908070605040302, 0x0203040506070809,
+      ];
+      doIntTest(type).slice(0, 3).should.eql(expected);
+    });
+    it('should read `uint64LE', () => {
+      const type = 'uint64LE';
+      const expected = [
+        0x0807060504030201, 0x0908070605040302, 0x0908070605040302,
+      ];
+      doIntTest(type).slice(0, 3).should.eql(expected);
+    });
+    it('should read `uint64BE', () => {
+      const type = 'uint64BE';
+      const expected = [
+        0x0102030405060708, 0x0203040506070809, 0x0203040506070809,
+      ];
+      doIntTest(type).slice(0, 3).should.eql(expected);
     });
 
     const doFloatDoubleTest = (type, exp1, exp2, exp3) => {
