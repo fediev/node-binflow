@@ -112,22 +112,22 @@ describe('Binflow', () => {
       const stru = {
         prop1: '_INVALID_TOKEN_',
       };
-      const fn = () => _validateStructure(stru);
-      fn.should.throw();
+      const doTest = () => _validateStructure(stru);
+      doTest.should.throw();
     });
     it('should throw on `byte` string token', () => {
       const stru = {
         prop1: 'byte',
       };
-      const fn = () => _validateStructure(stru);
-      fn.should.throw();
+      const doTest = () => _validateStructure(stru);
+      doTest.should.throw();
     });
     it('should throw on `string` string token', () => {
       const stru = {
         prop1: 'string',
       };
-      const fn = () => _validateStructure(stru);
-      fn.should.throw();
+      const doTest = () => _validateStructure(stru);
+      doTest.should.throw();
     });
 
     it('should return true on a valid array token', () => {
@@ -141,22 +141,22 @@ describe('Binflow', () => {
       const stru = {
         prop1: ['_INVALID_TOKEN_', 10],
       };
-      const fn = () => _validateStructure(stru);
-      fn.should.throw();
+      const doTest = () => _validateStructure(stru);
+      doTest.should.throw();
     });
     it('should throw on wrong array count', () => {
       const stru = {
         prop1: ['int8', '_NOT_NUMBER_'],
       };
-      const fn = () => _validateStructure(stru);
-      fn.should.throw();
+      const doTest = () => _validateStructure(stru);
+      doTest.should.throw();
     });
     it('should throw on wrong array token without count', () => {
       const stru = {
         prop1: ['int8'],
       };
-      const fn = () => _validateStructure(stru);
-      fn.should.throw();
+      const doTest = () => _validateStructure(stru);
+      doTest.should.throw();
     });
 
     it('should return true on valid object token', () => {
@@ -188,8 +188,8 @@ describe('Binflow', () => {
           subprop1: '_INVALID_TOKEN_',
         },
       };
-      const fn = () => _validateStructure(stru);
-      fn.should.throw();
+      const doTest = () => _validateStructure(stru);
+      doTest.should.throw();
     });
     it('should throw on invalid nested object token', () => {
       const stru = {
@@ -199,16 +199,16 @@ describe('Binflow', () => {
           },
         },
       };
-      const fn = () => _validateStructure(stru);
-      fn.should.throw();
+      const doTest = () => _validateStructure(stru);
+      doTest.should.throw();
     });
 
     it('should throw on not supporte token type', () => {
       const stru = {
         prop1: 1,
       };
-      const fn = () => _validateStructure(stru);
-      fn.should.throw();
+      const doTest = () => _validateStructure(stru);
+      doTest.should.throw();
     });
   });
 
