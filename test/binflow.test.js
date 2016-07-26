@@ -670,20 +670,17 @@ describe('Binflow', () => {
 
     it('should get value size of normal tokens', () => {
       binflow.NE_TYPES.forEach((type) => {
-        const token = type;
-        _getValueSize(token).should.eql(sizes[type]);
+        _getValueSize(type).should.eql(sizes[type]);
       });
     });
     it('should get value size of LE tokens', () => {
       binflow.NE_TYPES.forEach((type) => {
-        const token = type + 'LE';
-        _getValueSize(token).should.eql(sizes[type]);
+        _getValueSize(type + 'LE').should.eql(sizes[type]);
       });
     });
     it('should get value size of BE tokens', () => {
       binflow.NE_TYPES.forEach((type) => {
-        const token = type + 'BE';
-        _getValueSize(token).should.eql(sizes[type]);
+        _getValueSize(type + 'BE').should.eql(sizes[type]);
       });
     });
   });
