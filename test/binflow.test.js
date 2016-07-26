@@ -84,6 +84,42 @@ describe('Binflow', () => {
     });
   });
 
+  describe('_getPrimaryType()', () => {
+    const _getPrimaryType = binflow._getPrimaryType;
+    const ptypes = {
+      int8: 'int',
+      int16: 'int',
+      int24: 'int',
+      int32: 'int',
+      int64: 'int',
+      uint8: 'uint',
+      uint16: 'uint',
+      uint24: 'uint',
+      uint32: 'uint',
+      uint64: 'uint',
+      'float': 'float',
+      'double': 'double',
+      'byte': 'byte',
+      string: 'string',
+    };
+
+    it('should get primary type on NE types', () => {
+      binflow.NE_TYPES.forEach((type) => {
+        _getPrimaryType(type).should.eql(ptypes[type]);
+      });
+    });
+    it('should get types on LE types', () => {
+      binflow.NE_TYPES.forEach((type) => {
+        _getPrimaryType(type + 'LE').should.eql(ptypes[type]);
+      });
+    });
+    it('should get types on BE types', () => {
+      binflow.NE_TYPES.forEach((type) => {
+        _getPrimaryType(type + 'BE').should.eql(ptypes[type]);
+      });
+    });
+  });
+
   describe('_validateStructure()', () => {
     const _validateStructure = binflow._validateStructure;
 
