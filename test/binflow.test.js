@@ -4,10 +4,6 @@ const chai = require('chai');
 const should = chai.should();
 const binflow = require('../lib/binflow');
 
-const typesNE = binflow.NE_TYPES; // tokens with No Endian
-const typesLE = typesNE.map((token) => `${token}LE`);
-const typesBE = typesNE.map((token) => `${token}BE`);
-
 const buf12 = Buffer.from('0102', 'hex');
 const buf1234 = Buffer.from('0102030405060708090a', 'hex');
 const bufffff = Buffer.from('ffffffffffffffff', 'hex');
@@ -52,18 +48,18 @@ describe('Binflow', () => {
     const _hasEndian = binflow._hasEndian;
 
     it('should get false on NE types', () => {
-      typesNE.forEach((type) => {
+      binflow.NE_TYPES.forEach((type) => {
         _hasEndian(type).should.be.false;
       });
     });
     it('should get true on LE types', () => {
-      typesLE.forEach((type) => {
-        _hasEndian(type).should.be.true;
+      binflow.NE_TYPES.forEach((type) => {
+        _hasEndian(type + 'LE').should.be.true;
       });
     });
     it('should get true on BE types', () => {
-      typesBE.forEach((type) => {
-        _hasEndian(type).should.be.true;
+      binflow.NE_TYPES.forEach((type) => {
+        _hasEndian(type + 'BE').should.be.true;
       });
     });
   });
@@ -72,18 +68,18 @@ describe('Binflow', () => {
     const _getNeType = binflow._getNeType;
 
     it('should get type on NE types', () => {
-      typesNE.forEach((type) => {
+      binflow.NE_TYPES.forEach((type) => {
         _getNeType(type).should.eql(type);
       });
     });
     it('should get types on LE types', () => {
-      typesLE.forEach((type, idx) => {
-        _getNeType(type).should.eql(binflow.NE_TYPES[idx]);
+      binflow.NE_TYPES.forEach((type) => {
+        _getNeType(type + 'LE').should.eql(type);
       });
     });
     it('should get types on BE types', () => {
-      typesBE.forEach((type, idx) => {
-        _getNeType(type).should.eql(binflow.NE_TYPES[idx]);
+      binflow.NE_TYPES.forEach((type) => {
+        _getNeType(type + 'BE').should.eql(type);
       });
     });
   });
