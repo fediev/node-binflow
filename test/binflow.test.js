@@ -480,7 +480,7 @@ describe('Binflow', () => {
   describe('_writeByType()', () => {
     const _writeByType = binflow._writeByType;
 
-    const doIntTest = (type, expecteds) => {
+    const doIntTest = (type, expecteds, isLong) => {
       const vals = [1, 2, 3, -1];
       const offsets = [0, 1, 2, 0];
       // eslint-disable-next-line no-undefined
@@ -491,7 +491,7 @@ describe('Binflow', () => {
 
       expectedBufs.forEach((expected, idx) => {
         const val = vals[idx];
-        const buf = Buffer.from(bufffff);
+        const buf = Buffer.from(isLong ? bufff12 : bufffff);
         const offset = offsets[idx];
         const endian = endians[idx];
         _writeByType(val, buf, offset, type, endian);
@@ -559,6 +559,36 @@ describe('Binflow', () => {
       ];
       doIntTest(type, expecteds);
     });
+    it('should write `int24`', () => {
+      const type = 'int24';
+      const expecteds = [
+        '010000ffffffffff',
+        'ff020000ffffffff',
+        'ffff000003ffffff',
+        'ffffffffffffffff',
+      ];
+      doIntTest(type, expecteds);
+    });
+    it('should write `int24LE`', () => {
+      const type = 'int24LE';
+      const expecteds = [
+        '010000ffffffffff',
+        'ff020000ffffffff',
+        'ffff030000ffffff',
+        'ffffffffffffffff',
+      ];
+      doIntTest(type, expecteds);
+    });
+    it('should write `int24BE`', () => {
+      const type = 'int24BE';
+      const expecteds = [
+        '000001ffffffffff',
+        'ff000002ffffffff',
+        'ffff000003ffffff',
+        'ffffffffffffffff',
+      ];
+      doIntTest(type, expecteds);
+    });
     it('should write `int32`', () => {
       const type = 'int32';
       const expecteds = [
@@ -588,6 +618,36 @@ describe('Binflow', () => {
         'ffffffffffffffff',
       ];
       doIntTest(type, expecteds);
+    });
+    it('should write `int64`', () => {
+      const type = 'int64';
+      const expecteds = [
+        '0100000000000000ffffffff',
+        'ff0200000000000000ffffff',
+        'ffff0000000000000003ffff',
+        'ffffffffffffffffffffffff',
+      ];
+      doIntTest(type, expecteds, true);
+    });
+    it('should write `int64LE`', () => {
+      const type = 'int64LE';
+      const expecteds = [
+        '0100000000000000ffffffff',
+        'ff0200000000000000ffffff',
+        'ffff0300000000000000ffff',
+        'ffffffffffffffffffffffff',
+      ];
+      doIntTest(type, expecteds, true);
+    });
+    it('should write `int64BE`', () => {
+      const type = 'int64BE';
+      const expecteds = [
+        '0000000000000001ffffffff',
+        'ff0000000000000002ffffff',
+        'ffff0000000000000003ffff',
+        'ffffffffffffffffffffffff',
+      ];
+      doIntTest(type, expecteds, true);
     });
     it('should write `uint8`', () => {
       const type = 'uint8';
@@ -643,6 +703,33 @@ describe('Binflow', () => {
       ];
       doIntTest(type, expecteds);
     });
+    it('should write `uint24`', () => {
+      const type = 'uint24';
+      const expecteds = [
+        '010000ffffffffff',
+        'ff020000ffffffff',
+        'ffff000003ffffff',
+      ];
+      doIntTest(type, expecteds);
+    });
+    it('should write `uint24LE`', () => {
+      const type = 'uint24LE';
+      const expecteds = [
+        '010000ffffffffff',
+        'ff020000ffffffff',
+        'ffff030000ffffff',
+      ];
+      doIntTest(type, expecteds);
+    });
+    it('should write `uint24BE`', () => {
+      const type = 'uint24BE';
+      const expecteds = [
+        '000001ffffffffff',
+        'ff000002ffffffff',
+        'ffff000003ffffff',
+      ];
+      doIntTest(type, expecteds);
+    });
     it('should write `uint32`', () => {
       const type = 'uint32';
       const expecteds = [
@@ -669,6 +756,33 @@ describe('Binflow', () => {
         'ffff00000003ffff',
       ];
       doIntTest(type, expecteds);
+    });
+    it('should write `uint64`', () => {
+      const type = 'uint64';
+      const expecteds = [
+        '0100000000000000ffffffff',
+        'ff0200000000000000ffffff',
+        'ffff0000000000000003ffff',
+      ];
+      doIntTest(type, expecteds, true);
+    });
+    it('should write `uint64LE`', () => {
+      const type = 'uint64LE';
+      const expecteds = [
+        '0100000000000000ffffffff',
+        'ff0200000000000000ffffff',
+        'ffff0300000000000000ffff',
+      ];
+      doIntTest(type, expecteds, true);
+    });
+    it('should write `uint64BE`', () => {
+      const type = 'uint64BE';
+      const expecteds = [
+        '0000000000000001ffffffff',
+        'ff0000000000000002ffffff',
+        'ffff0000000000000003ffff',
+      ];
+      doIntTest(type, expecteds, true);
     });
 
     const doFloatDoubleTest = (type, expecteds) => {
