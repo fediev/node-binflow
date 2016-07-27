@@ -481,12 +481,15 @@ describe('Binflow', () => {
     const _writeByType = binflow._writeByType;
 
     const doIntTest = (type, expecteds) => {
-      const vals = [0, 1, 2, -1];
+      const vals = [1, 2, 3, -1];
       const offsets = [0, 1, 2, 0];
       // eslint-disable-next-line no-undefined
       const endians = [undefined, 'LE', 'BE', undefined];
+      const expectedBufs = expecteds.map((hex) => {
+        return Buffer.from(hex, 'hex');
+      });
 
-      expecteds.forEach((expected, idx) => {
+      expectedBufs.forEach((expected, idx) => {
         const val = vals[idx];
         const buf = Buffer.from(bufffff);
         const offset = offsets[idx];
@@ -499,256 +502,230 @@ describe('Binflow', () => {
     it('should write `int8`', () => {
       const type = 'int8';
       const expecteds = [
-        Buffer.from('00ffffffffffffff', 'hex'),
-        Buffer.from('ff01ffffffffffff', 'hex'),
-        Buffer.from('ffff02ffffffffff', 'hex'),
-        Buffer.from('ffffffffffffffff', 'hex'),
+        '01ffffffffffffff',
+        'ff02ffffffffffff',
+        'ffff03ffffffffff',
+        'ffffffffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `int8LE`', () => {
       const type = 'int8LE';
       const expecteds = [
-        Buffer.from('00ffffffffffffff', 'hex'),
-        Buffer.from('ff01ffffffffffff', 'hex'),
-        Buffer.from('ffff02ffffffffff', 'hex'),
-        Buffer.from('ffffffffffffffff', 'hex'),
+        '01ffffffffffffff',
+        'ff02ffffffffffff',
+        'ffff03ffffffffff',
+        'ffffffffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `int8BE`', () => {
       const type = 'int8BE';
       const expecteds = [
-        Buffer.from('00ffffffffffffff', 'hex'),
-        Buffer.from('ff01ffffffffffff', 'hex'),
-        Buffer.from('ffff02ffffffffff', 'hex'),
-        Buffer.from('ffffffffffffffff', 'hex'),
+        '01ffffffffffffff',
+        'ff02ffffffffffff',
+        'ffff03ffffffffff',
+        'ffffffffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `int16`', () => {
       const type = 'int16';
       const expecteds = [
-        Buffer.from('0000ffffffffffff', 'hex'),
-        Buffer.from('ff0100ffffffffff', 'hex'),
-        Buffer.from('ffff0002ffffffff', 'hex'),
-        Buffer.from('ffffffffffffffff', 'hex'),
+        '0100ffffffffffff',
+        'ff0200ffffffffff',
+        'ffff0003ffffffff',
+        'ffffffffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `int16LE`', () => {
       const type = 'int16LE';
       const expecteds = [
-        Buffer.from('0000ffffffffffff', 'hex'),
-        Buffer.from('ff0100ffffffffff', 'hex'),
-        Buffer.from('ffff0200ffffffff', 'hex'),
-        Buffer.from('ffffffffffffffff', 'hex'),
+        '0100ffffffffffff',
+        'ff0200ffffffffff',
+        'ffff0300ffffffff',
+        'ffffffffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `int16BE`', () => {
       const type = 'int16BE';
       const expecteds = [
-        Buffer.from('0000ffffffffffff', 'hex'),
-        Buffer.from('ff0001ffffffffff', 'hex'),
-        Buffer.from('ffff0002ffffffff', 'hex'),
-        Buffer.from('ffffffffffffffff', 'hex'),
+        '0001ffffffffffff',
+        'ff0002ffffffffff',
+        'ffff0003ffffffff',
+        'ffffffffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `int32`', () => {
       const type = 'int32';
       const expecteds = [
-        Buffer.from('00000000ffffffff', 'hex'),
-        Buffer.from('ff01000000ffffff', 'hex'),
-        Buffer.from('ffff00000002ffff', 'hex'),
-        Buffer.from('ffffffffffffffff', 'hex'),
+        '01000000ffffffff',
+        'ff02000000ffffff',
+        'ffff00000003ffff',
+        'ffffffffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `int32LE`', () => {
       const type = 'int32LE';
       const expecteds = [
-        Buffer.from('00000000ffffffff', 'hex'),
-        Buffer.from('ff01000000ffffff', 'hex'),
-        Buffer.from('ffff02000000ffff', 'hex'),
-        Buffer.from('ffffffffffffffff', 'hex'),
+        '01000000ffffffff',
+        'ff02000000ffffff',
+        'ffff03000000ffff',
+        'ffffffffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `int32BE`', () => {
       const type = 'int32BE';
       const expecteds = [
-        Buffer.from('00000000ffffffff', 'hex'),
-        Buffer.from('ff00000001ffffff', 'hex'),
-        Buffer.from('ffff00000002ffff', 'hex'),
-        Buffer.from('ffffffffffffffff', 'hex'),
+        '00000001ffffffff',
+        'ff00000002ffffff',
+        'ffff00000003ffff',
+        'ffffffffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `uint8`', () => {
       const type = 'uint8';
       const expecteds = [
-        Buffer.from('00ffffffffffffff', 'hex'),
-        Buffer.from('ff01ffffffffffff', 'hex'),
-        Buffer.from('ffff02ffffffffff', 'hex'),
+        '01ffffffffffffff',
+        'ff02ffffffffffff',
+        'ffff03ffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `uint8LE`', () => {
       const type = 'uint8LE';
       const expecteds = [
-        Buffer.from('00ffffffffffffff', 'hex'),
-        Buffer.from('ff01ffffffffffff', 'hex'),
-        Buffer.from('ffff02ffffffffff', 'hex'),
+        '01ffffffffffffff',
+        'ff02ffffffffffff',
+        'ffff03ffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `uint8BE`', () => {
       const type = 'uint8BE';
       const expecteds = [
-        Buffer.from('00ffffffffffffff', 'hex'),
-        Buffer.from('ff01ffffffffffff', 'hex'),
-        Buffer.from('ffff02ffffffffff', 'hex'),
+        '01ffffffffffffff',
+        'ff02ffffffffffff',
+        'ffff03ffffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `uint16`', () => {
       const type = 'uint16';
       const expecteds = [
-        Buffer.from('0000ffffffffffff', 'hex'),
-        Buffer.from('ff0100ffffffffff', 'hex'),
-        Buffer.from('ffff0002ffffffff', 'hex'),
+        '0100ffffffffffff',
+        'ff0200ffffffffff',
+        'ffff0003ffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `uint16LE`', () => {
       const type = 'uint16LE';
       const expecteds = [
-        Buffer.from('0000ffffffffffff', 'hex'),
-        Buffer.from('ff0100ffffffffff', 'hex'),
-        Buffer.from('ffff0200ffffffff', 'hex'),
+        '0100ffffffffffff',
+        'ff0200ffffffffff',
+        'ffff0300ffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `uint16BE`', () => {
       const type = 'uint16BE';
       const expecteds = [
-        Buffer.from('0000ffffffffffff', 'hex'),
-        Buffer.from('ff0001ffffffffff', 'hex'),
-        Buffer.from('ffff0002ffffffff', 'hex'),
+        '0001ffffffffffff',
+        'ff0002ffffffffff',
+        'ffff0003ffffffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `uint32`', () => {
       const type = 'uint32';
       const expecteds = [
-        Buffer.from('00000000ffffffff', 'hex'),
-        Buffer.from('ff01000000ffffff', 'hex'),
-        Buffer.from('ffff00000002ffff', 'hex'),
+        '01000000ffffffff',
+        'ff02000000ffffff',
+        'ffff00000003ffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `uint32LE`', () => {
       const type = 'uint32LE';
       const expecteds = [
-        Buffer.from('00000000ffffffff', 'hex'),
-        Buffer.from('ff01000000ffffff', 'hex'),
-        Buffer.from('ffff02000000ffff', 'hex'),
+        '01000000ffffffff',
+        'ff02000000ffffff',
+        'ffff03000000ffff',
       ];
       doIntTest(type, expecteds);
     });
     it('should write `uint32BE`', () => {
       const type = 'uint32BE';
       const expecteds = [
-        Buffer.from('00000000ffffffff', 'hex'),
-        Buffer.from('ff00000001ffffff', 'hex'),
-        Buffer.from('ffff00000002ffff', 'hex'),
+        '00000001ffffffff',
+        'ff00000002ffffff',
+        'ffff00000003ffff',
       ];
       doIntTest(type, expecteds);
     });
 
-    const floatValue = 1234.5678;
     const doFloatDoubleTest = (type, expecteds) => {
+      const writers = {
+        FLE: Buffer.prototype.writeFloatLE,
+        FBE: Buffer.prototype.writeFloatBE,
+        DLE: Buffer.prototype.writeDoubleLE,
+        DBE: Buffer.prototype.writeDoubleBE,
+      };
+      const floatValue = 1234.5678;
       const offsets = [0, 1, 2];
       // eslint-disable-next-line no-undefined
       const endians = [undefined, 'LE', 'BE'];
+      const expectedBufs = expecteds.map((writer, idx) => {
+        const buf = Buffer.from(bufff12);
+        writers[writer].call(buf, floatValue, offsets[idx]);
+        return buf;
+      });
 
-      expecteds.forEach((expected, idx) => {
+      expectedBufs.forEach((expected, idx) => {
         const val = floatValue;
         const buf = Buffer.from(bufff12);
         const offset = offsets[idx];
         const endian = endians[idx];
         _writeByType(val, buf, offset, type, endian);
-        buf.should.be.eql(expected, 'with endian' + endian);
+        buf.should.be.eql(expected, 'with endian ' + endian);
       });
     };
 
-    // TODO: refactoring
     it('should write `float`', () => {
       const type = 'float';
-      const bufNE = Buffer.from(bufff12);
-      const bufLE = Buffer.from(bufff12);
-      const bufBE = Buffer.from(bufff12);
-      bufNE.writeFloatLE(floatValue, 0);
-      bufLE.writeFloatLE(floatValue, 1);
-      bufBE.writeFloatBE(floatValue, 2);
-      const expecteds = [bufNE, bufLE, bufBE];
+      const expecteds = ['FLE', 'FLE', 'FBE'];
       doFloatDoubleTest(type, expecteds);
     });
     it('should write `floatLE`', () => {
       const type = 'floatLE';
-      const bufNE = Buffer.from(bufff12);
-      const bufLE = Buffer.from(bufff12);
-      const bufBE = Buffer.from(bufff12);
-      bufNE.writeFloatLE(floatValue, 0);
-      bufLE.writeFloatLE(floatValue, 1);
-      bufBE.writeFloatLE(floatValue, 2);
-      const expecteds = [bufNE, bufLE, bufBE];
+      const expecteds = ['FLE', 'FLE', 'FLE'];
       doFloatDoubleTest(type, expecteds);
     });
     it('should write `floatBE`', () => {
       const type = 'floatBE';
-      const bufNE = Buffer.from(bufff12);
-      const bufLE = Buffer.from(bufff12);
-      const bufBE = Buffer.from(bufff12);
-      bufNE.writeFloatBE(floatValue, 0);
-      bufLE.writeFloatBE(floatValue, 1);
-      bufBE.writeFloatBE(floatValue, 2);
-      const expecteds = [bufNE, bufLE, bufBE];
+      const expecteds = ['FBE', 'FBE', 'FBE'];
       doFloatDoubleTest(type, expecteds);
     });
     it('should write `double`', () => {
       const type = 'double';
-      const bufNE = Buffer.from(bufff12);
-      const bufLE = Buffer.from(bufff12);
-      const bufBE = Buffer.from(bufff12);
-      bufNE.writeDoubleLE(floatValue, 0);
-      bufLE.writeDoubleLE(floatValue, 1);
-      bufBE.writeDoubleBE(floatValue, 2);
-      const expecteds = [bufNE, bufLE, bufBE];
+      const expecteds = ['DLE', 'DLE', 'DBE'];
       doFloatDoubleTest(type, expecteds);
     });
     it('should write `doubleLE`', () => {
       const type = 'doubleLE';
-      const bufNE = Buffer.from(bufff12);
-      const bufLE = Buffer.from(bufff12);
-      const bufBE = Buffer.from(bufff12);
-      bufNE.writeDoubleLE(floatValue, 0);
-      bufLE.writeDoubleLE(floatValue, 1);
-      bufBE.writeDoubleLE(floatValue, 2);
-      const expecteds = [bufNE, bufLE, bufBE];
+      const expecteds = ['DLE', 'DLE', 'DLE'];
       doFloatDoubleTest(type, expecteds);
     });
     it('should write `doubleBE`', () => {
       const type = 'doubleBE';
-      const bufNE = Buffer.from(bufff12);
-      const bufLE = Buffer.from(bufff12);
-      const bufBE = Buffer.from(bufff12);
-      bufNE.writeDoubleBE(floatValue, 0);
-      bufLE.writeDoubleBE(floatValue, 1);
-      bufBE.writeDoubleBE(floatValue, 2);
-      const expecteds = [bufNE, bufLE, bufBE];
+      const expecteds = ['DBE', 'DBE', 'DBE'];
       doFloatDoubleTest(type, expecteds);
     });
   });
