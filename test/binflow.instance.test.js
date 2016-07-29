@@ -347,6 +347,19 @@ describe('binflow instance', () => {
       result.should.eql(expected);
     });
 
+    it('should parse at specified starting point', () => {
+      const stru = {
+        prop1: 'uint8',
+      };
+      const startAt = 2;
+      const expected = {
+        prop1: 0x03,
+      };
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.parse(buf1234, startAt);
+      result.should.eql(expected);
+    });
+
     it('should throw RangeError when buf is not enough', () => {
       const stru = {
         prop1: 'uint32',
