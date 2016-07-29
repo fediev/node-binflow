@@ -11,7 +11,6 @@ const bufffff = Buffer.from('ffffffffffffffff', 'hex');
 describe('binflow instance', () => {
   describe('setEndian', () => {
     const bnf = binflow.createBinflow();
-    // eslint-disable-next-line no-extra-parens
     const doTest = (endian) => (() => bnf.setEndian(endian));
 
     it('should not throw on valid endian', () => {
@@ -286,6 +285,40 @@ describe('binflow instance', () => {
       result.should.eql(expected);
     });
 
+    it('should ignore `$endian`', () => {
+      const stru = {
+        prop1: 'int16',
+        $endian: 'BE',
+        prop2: 'uint32',
+      };
+      const expected = {
+        prop1: 0x0102,
+        prop2: 0x03040506,
+      };
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.parse(buf1234);
+      result.should.eql(expected);
+    });
+    it('should recognize nested objects `$endian`', () => {
+      const stru = {
+        $endian: 'BE',
+        prop1: 'int16',
+        prop2: {
+          $endian: 'LE',
+          subprop1: 'int16',
+        },
+      };
+      const expected = {
+        prop1: 0x0102,
+        prop2: {
+          subprop1: 0x0403,
+        },
+      };
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.parse(buf1234);
+      result.should.eql(expected);
+    });
+
     it('should throw RangeError when buf is not enough', () => {
       const stru = {
         prop1: 'uint32',
@@ -475,6 +508,42 @@ describe('binflow instance', () => {
         prop3: 0x05,
       };
       const expected = Buffer.from('0103020405', 'hex');
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.encode(values);
+      result.should.eql(expected);
+    });
+
+    it('should ignore `$endian`', () => {
+      const stru = {
+        prop1: 'int16',
+        $endian: 'BE',
+        prop2: 'uint32',
+      };
+      const values = {
+        prop1: 0x0102,
+        prop2: 0x03040506,
+      };
+      const expected = Buffer.from('010203040506', 'hex');
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.encode(values);
+      result.should.eql(expected);
+    });
+    it('should recognize nested objects `$endian`', () => {
+      const stru = {
+        $endian: 'BE',
+        prop1: 'int16',
+        prop2: {
+          $endian: 'LE',
+          subprop1: 'int16',
+        },
+      };
+      const values = {
+        prop1: 0x0102,
+        prop2: {
+          subprop1: 0x0304,
+        },
+      };
+      const expected = Buffer.from('01020403', 'hex');
       const bnf = binflow.createBinflow(stru);
       const result = bnf.encode(values);
       result.should.eql(expected);

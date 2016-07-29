@@ -42,6 +42,24 @@ describe('Binflow', () => {
       const fn = () => binflow.createBinflow(validStru, '_NE_');
       fn.should.throw();
     });
+    it('should set endian correctly with in-structure endian setting', () => {
+      const expected = 'BE';
+      const bnf = binflow.createBinflow({ $endian: expected });
+      const result = bnf.getEndian();
+      result.should.eql(expected);
+    });
+    it('should override LE in-structure endian with BE endian param', () => {
+      const expected = 'BE';
+      const bnf = binflow.createBinflow({ $endian: 'LE' }, expected);
+      const result = bnf.getEndian();
+      result.should.eql(expected);
+    });
+    it('should override BE in-structure endian with LE endian param', () => {
+      const expected = 'LE';
+      const bnf = binflow.createBinflow({ $endian: 'BE' }, expected);
+      const result = bnf.getEndian();
+      result.should.eql(expected);
+    });
   });
 
   describe('_hasEndian()', () => {
@@ -131,6 +149,15 @@ describe('Binflow', () => {
       };
       const result = _validateStructure(stru);
       result.should.be.true;
+    });
+
+    it('should return true on `$endian` key', () => {
+      const stru = {
+        prop1: 'int8',
+        $endian: 'LE',
+        prop2: 'int8',
+      };
+      _validateStructure(stru).should.be.true;
     });
 
     it('should return true on a valid string token', () => {
@@ -929,6 +956,18 @@ describe('Binflow', () => {
       const result = _getTokenOffsetOfField(stru, field);
       result.token.should.eql(stru.prop5.subprop4[field], 'token');
       result.offset.should.eql(52, 'offset');
+    });
+
+    it('should ignore `$endian`', () => {
+      const struWithEndian = {
+        prop1: 'int16',
+        $endian: 'BE',
+        prop2: 'uin32',
+      };
+      const field = 'prop2';
+      const result = _getTokenOffsetOfField(struWithEndian, field);
+      result.token.should.eql(struWithEndian[field], 'token');
+      result.offset.should.eql(2, 'offset');
     });
   });
 
