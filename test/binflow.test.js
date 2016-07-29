@@ -950,25 +950,25 @@ describe('Binflow', () => {
       const result = _getTokenOffsetOfField(fullSpecStructure, field);
       const expected = fullSpecStructure[field];
       result.token.should.eql(expected, 'token');
-      result.offset.should.eql(22, 'offset');
+      result.offset.should.eql(34, 'offset');
     });
     it('should get info of sub field', () => {
       const field = 'subprop3';
       const result = _getTokenOffsetOfField(fullSpecStructure, field);
       const expected = fullSpecStructure.prop8[field];
       result.token.should.eql(expected, 'token');
-      result.offset.should.eql(34, 'offset');
+      result.offset.should.eql(46, 'offset');
     });
     it('should get info of sub sub field', () => {
       const field = 'subsubprop2';
       const result = _getTokenOffsetOfField(fullSpecStructure, field);
       const expected = fullSpecStructure.prop8.subprop6[field];
       result.token.should.eql(expected, 'token');
-      result.offset.should.eql(45, 'offset');
+      result.offset.should.eql(63, 'offset');
     });
     it('should get size of structue without field', () => {
       const result = _getTokenOffsetOfField(fullSpecStructure);
-      result.offset.should.eql(59, 'offset');
+      result.offset.should.eql(77, 'offset');
     });
 
     it('should ignore `$endian`', () => {
@@ -986,7 +986,7 @@ describe('Binflow', () => {
 
   describe('_getStructureSize()', () => {
     it('should get structure byte size', () => {
-      binflow._getStructureSize(fullSpecStructure).should.eql(59);
+      binflow._getStructureSize(fullSpecStructure).should.eql(77);
     });
     it('should get 0 on empty structure', () => {
       const stru = {};

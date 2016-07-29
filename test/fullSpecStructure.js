@@ -1,4 +1,4 @@
-// total size: 59 bytes
+// total size: 77 bytes
 const fullSpecStructure = {
   $endian: 'BE',
   prop1: 'int16',               // 2
@@ -6,14 +6,21 @@ const fullSpecStructure = {
   prop3: ['int16BE', 3],        // 6 = 2 * 3
   prop4: ['byte', 4],           // 4
   prop5: ['string', 5],         // 5
-  // TODO: prop6: object array
+  prop6: [{                     // 12 = 4 * 3
+    $endian: 'LE',
+    oprop1: 'int16',
+    oprop2: 'int16BE',
+  }, 3],
   prop7: 'int32LE',             // 4
   prop8: {
     subprop1: 'uint32',         // 4
     subprop2: ['int16LE', 4],   // 8 = 2 * 4
     subprop3: ['byte', 2],      // 2
     subprop4: ['string', 5],    // 5
-    // TODO: subprop5: object array
+    subprop5: [{                // 6 = 3 * 2
+      oprop1: 'int16',
+      oprop2: 'int8',
+    }, 2],
     subprop6: {
       subsubprop1: 'uint32BE',  // 4
       subsubprop2: ['int8', 4], // 4
