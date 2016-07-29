@@ -3,10 +3,16 @@ const chai = require('chai');
 // eslint-disable-next-line no-unused-vars
 const should = chai.should();
 const binflow = require('../lib/binflow');
+const fullSpecStructure = require('./fullSpecStructure');
 
 const buf12 = Buffer.from('0102', 'hex');
 const buf1234 = Buffer.from('0102030405060708090a', 'hex');
 const bufffff = Buffer.from('ffffffffffffffff', 'hex');
+const buf64 = Buffer.from(
+  '0102030405060708010203040506070801020304050607080102030405060708'
+  + '0102030405060708010203040506070801020304050607080102030405060708',
+  'hex'
+);
 
 describe('binflow instance', () => {
   describe('setEndian', () => {
@@ -349,6 +355,39 @@ describe('binflow instance', () => {
       const doTest = () => bnf.parse(buf12);
       doTest.should.throw(RangeError);
     });
+
+    it('should parse on full spec structure', () => {
+      const expected = {
+        prop1: 0x0102,
+        prop2: 0x03,
+        prop3: [0x0405, 0x0607, 0x0801],
+        prop4: Buffer.from('02030405', 'hex'),
+        prop5: Buffer.from('0607080102', 'hex').toString(),
+        // TODO: prop6: object array
+        prop7: 0x06050403,
+        prop8: {
+          subprop1: 0x07080102,
+          subprop2: [0x0403, 0x0605, 0x0807, 0x0201],
+          subprop3: Buffer.from('0304', 'hex'),
+          subprop4: Buffer.from('0506070801', 'hex').toString(),
+          // TODO: subprop5: object array
+          subprop6: {
+            subsubprop1: 0x02030405,
+            subsubprop2: [0x06, 0x07, 0x08, 0x01],
+          },
+          subprop7: 0x02,
+        },
+        prop9: {
+          sub2prop1: 0x0403,
+          sub2prop2: 0x05060708,
+          sub2prop3: 0x01,
+        },
+        prop10: 0x0302,
+      };
+      const bnf = binflow.createBinflow(fullSpecStructure);
+      const result = bnf.parse(buf64);
+      result.should.eql(expected);
+    });
   });
 
   describe('encode()', () => {
@@ -567,6 +606,44 @@ describe('binflow instance', () => {
       };
       const expected = Buffer.from('01020403', 'hex');
       const bnf = binflow.createBinflow(stru);
+      const result = bnf.encode(values);
+      result.should.eql(expected);
+    });
+
+    it('should encode on full spec structure', () => {
+      const values = {
+        prop1: 0x0102,
+        prop2: 0x01,
+        prop3: [0x0102, 0x0304, 0x0506],
+        prop4: Buffer.from('01020304', 'hex'),
+        prop5: 'hello',
+        // TODO: prop6: object array
+        prop7: 0x01020304,
+        prop8: {
+          subprop1: 0x01020304,
+          subprop2: [0x0102, 0x0304, 0x0506, 0x0708],
+          subprop3: Buffer.from('0102', 'hex'),
+          subprop4: 'world',
+          // TODO: subprop5: object array
+          subprop6: {
+            subsubprop1: 0x01020304,
+            subsubprop2: [0x01, 0x02, 0x03, 0x04],
+          },
+          subprop7: 0x01,
+        },
+        prop9: {
+          sub2prop1: 0x0102,
+          sub2prop2: 0x01020304,
+          sub2prop3: 0x01,
+        },
+        prop10: 0x0102,
+      };
+      const expected = Buffer.from(
+        '0102010102030405060102030468656c6c6f04030201010203040201040306050807'
+        + '0102776f726c64010203040102030401020101020304010201',
+        'hex'
+      );
+      const bnf = binflow.createBinflow(fullSpecStructure);
       const result = bnf.encode(values);
       result.should.eql(expected);
     });
