@@ -20,6 +20,11 @@ describe('binflow instance', () => {
     it('should throw on wrong endian', () => {
       doTest('_INVALID_ENDIAN_').should.throw('WRONG_ENDIAN');
     });
+    it('should return a bnf instance for chaining', () => {
+      bnf.setEndian('BE').should.respondTo('struct');
+      bnf.setEndian('BE').should.respondTo('parse');
+      bnf.setEndian('BE').should.respondTo('encode');
+    });
   });
 
   describe('getEndian', () => {
@@ -116,6 +121,23 @@ describe('binflow instance', () => {
       };
       bnf.struct(stru2);
       bnf.parse(buf1234).should.eql(expected2);
+    });
+    it('should return a bnf instance for chaining', () => {
+      const stru = {
+        prop1: 'uint32',
+        prop2: 'uint8',
+        prop3: 'uint16',
+      };
+      const expected = {
+        prop1: 0x01020304,
+        prop2: 0x05,
+        prop3: 0x0607,
+      };
+      const bnf = binflow.createBinflow();
+      bnf.struct(stru).should.respondTo('struct');
+      bnf.struct(stru).should.respondTo('parse');
+      bnf.struct(stru).should.respondTo('encode');
+      bnf.struct(stru, 'BE').parse(buf1234).should.eql(expected);
     });
   });
 
@@ -571,15 +593,15 @@ describe('binflow instance', () => {
       const field = 'prop3';
       const value = 0x01;
       const expected = Buffer.from('ffffffffffffffff00000001ffffffff', 'hex');
-      const result = bnf.set(buf, field, value);
-      result.should.eql(expected);
+      bnf.set(buf, field, value);
+      buf.should.eql(expected);
     });
     it('should set array field', () => {
       const field = 'prop2';
       const value = [0x01, 0x02, 0x03];
       const expected = Buffer.from('ffff010002000300ffffffffffffffff', 'hex');
-      const result = bnf.set(buf, field, value);
-      result.should.eql(expected);
+      bnf.set(buf, field, value);
+      buf.should.eql(expected);
     });
     it('should set object field', () => {
       const field = 'prop4';
@@ -588,15 +610,26 @@ describe('binflow instance', () => {
         subprop2: 0x02,
       };
       const expected = Buffer.from('ffffffffffffffffffffffff010002ff', 'hex');
-      const result = bnf.set(buf, field, value);
-      result.should.eql(expected);
+      bnf.set(buf, field, value);
+      buf.should.eql(expected);
     });
     it('should set object sub field', () => {
       const field = 'subprop2';
       const value = 0x01;
       const expected = Buffer.from('ffffffffffffffffffffffffffff01ff', 'hex');
-      const result = bnf.set(buf, field, value);
-      result.should.eql(expected);
+      bnf.set(buf, field, value);
+      buf.should.eql(expected);
+    });
+    it('should return a bnf instance for chaining', () => {
+      const expected = Buffer.from('0100ffffffffffff00000002ffffff03', 'hex');
+      const result = bnf.set(buf, 'prop1', 0x01);
+      result.should.respondTo('struct');
+      result.should.respondTo('parse');
+      result.should.respondTo('encode');
+      bnf.set(buf, 'prop1', 0x01)
+         .set(buf, 'prop3', 0x02)
+         .set(buf, 'prop5', 0x03);
+      buf.should.eql(expected);
     });
   });
 
