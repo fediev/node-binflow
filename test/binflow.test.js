@@ -902,20 +902,29 @@ describe('Binflow', () => {
       string: 1,
     };
 
-    it('should get value size of normal tokens', () => {
+    it('should get value size of NE types', () => {
       binflow.NE_TYPES.forEach((type) => {
         _getValueSize(type).should.eql(sizes[type]);
       });
     });
-    it('should get value size of LE tokens', () => {
+    it('should get value size of LE types', () => {
       binflow.NE_TYPES.forEach((type) => {
         _getValueSize(type + 'LE').should.eql(sizes[type]);
       });
     });
-    it('should get value size of BE tokens', () => {
+    it('should get value size of BE types', () => {
       binflow.NE_TYPES.forEach((type) => {
         _getValueSize(type + 'BE').should.eql(sizes[type]);
       });
+    });
+
+    it('should get structure size when object is passed as type', () => {
+      const type = {
+        prop1: 'int32',
+        prop2: ['int16', 5],
+      };
+      const expected = 14;
+      _getValueSize(type).should.eql(expected);
     });
   });
 
