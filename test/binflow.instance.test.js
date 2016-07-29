@@ -23,6 +23,27 @@ describe('binflow instance', () => {
     });
   });
 
+  describe('getEndian', () => {
+    it('should get `LE` with no endian specified', () => {
+      const expected = 'LE';
+      const bnf = binflow.createBinflow();
+      const result = bnf.getEndian();
+      result.should.eql(expected);
+    });
+    it('should get `LE` with LE endian specified', () => {
+      const expected = 'LE';
+      const bnf = binflow.createBinflow({}, expected);
+      const result = bnf.getEndian();
+      result.should.eql(expected);
+    });
+    it('should get `BE` with BE endian specified', () => {
+      const expected = 'BE';
+      const bnf = binflow.createBinflow({}, expected);
+      const result = bnf.getEndian();
+      result.should.eql(expected);
+    });
+  });
+
   describe('struct()', () => {
     it('should reset structure of binflow', () => {
       const stru = {
