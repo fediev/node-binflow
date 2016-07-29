@@ -12,6 +12,8 @@
     "mocha": "^2.5.3"
   },
   "scripts": {
+    "lint": "eslint lib test",
+    "prerelease": "npm run lint",
     "test": "mocha test/**/*.test.js",
     "test:watch": "npm run test -- --watch"
   },
