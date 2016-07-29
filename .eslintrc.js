@@ -1,10 +1,10 @@
 /**
  * .eslintrc.js
- * rev: r.3.0.0
+ * rev: r.3.0.1
  *   eslint: ^3.0.1
  *   eslint-plugin-react: ^5.2.2
  *   babel-eslint: ^6.1.2
- * local-modification: NONE
+ * local-modification: no-react
  */
 
 /* eslint-disable quote-props */
@@ -23,14 +23,12 @@ module.exports = {
     sourceType: 'module',
     ecmaFeatures: {
       impliedStrict: true,
-      jsx: true,
       experimentalObjectRestSpread: true,
     },
   },
   plugins: [
-    'react',
   ],
-  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  extends: ['eslint:recommended'],
   rules: {
     // Possible Errors
     'no-cond-assign': ['error', 'except-parens'],
@@ -45,7 +43,7 @@ module.exports = {
     'no-empty-character-class': 'error',
     'no-ex-assign': 'error',
     'no-extra-boolean-cast': 'error',
-    'no-extra-parens': ['warn', 'all', { nestedBinaryExpressions: false }],
+    'no-extra-parens': ['off'],
     'no-extra-semi': 'error',
     'no-func-assign': 'error',
     'no-inner-declarations': ['error', 'both'],
@@ -216,7 +214,7 @@ module.exports = {
     'max-lines': 'off',
     'max-nested-callbacks': ['error', 4],
     'max-params': ['warn', 6],
-    'max-statements': ['warn', 20],
+    'max-statements': ['warn', 30],
     'max-statements-per-line': ['error', { max: 1 }],
     'new-cap': 'error',
     'new-parens': 'error',
@@ -316,64 +314,5 @@ module.exports = {
     'sort-imports': 'off',
     'template-curly-spacing': ['error', 'never'],
     'yield-star-spacing': ['error', 'after'],
-
-    // eslint-plugin-react
-    'react/display-name': 'off',
-    'react/forbid-prop-types': ['error', { forbid: ['any'] }],
-    'react/no-comment-textnodes': 'error',
-    'react/no-danger': 'error',
-    'react/no-deprecated': 'error',
-    'react/no-did-mount-set-state': ['error', 'allow-in-func'],
-    'react/no-did-update-set-state': ['error', 'allow-in-func'],
-    'react/no-direct-mutation-state': 'error',
-    'react/no-is-mounted': 'error',
-    'react/no-multi-comp': 'error',
-    'react/no-render-return-value': 'error',
-    'react/no-set-state': 'off',
-    'react/no-string-refs': 'warn',
-    'react/no-unknown-property': 'error',
-    'react/prefer-es6-class': ['error', 'always'],
-    'react/prefer-stateless-function': 'warn',
-    'react/prop-types': 'error',
-    'react/react-in-jsx-scope': 'error',
-    'react/require-extension': ['error', { extensions: ['.js', '.jsx'] }],
-    'react/require-optimization': 'off',
-    'react/require-render-return': 'error',
-    'react/self-closing-comp': 'error',
-    'react/sort-comp': 'error',
-    'react/sort-prop-types': ['error', {
-      ignoreCase: true,
-      callbacksLast: true,
-    }],
-    'react/wrap-multilines': 'error',
-    // eslint-plugin-react jsx
-    'react/jsx-boolean-value': ['error', 'always'],
-    'react/jsx-closing-bracket-location': ['error', 'tag-aligned'],
-    'react/jsx-curly-spacing': ['error', 'never'],
-    'react/jsx-equals-spacing': ['error', 'never'],
-    'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx'] }],
-    'react/jsx-first-prop-new-line': ['error', 'multiline'],
-    'react/jsx-handler-names': ['error', {
-      eventHandlerPrefix: 'handle',
-      eventHandlerPropPrefix: 'on',
-    }],
-    'react/jsx-indent': ['error', 2],
-    'react/jsx-indent-props': ['error', 2],
-    'react/jsx-key': 'error',
-    'react/jsx-max-props-per-line': ['error', { maximum: 2 }],
-    'react/jsx-no-bind': ['error', {
-      ignoreRefs: true,
-      allowArrowFunctions: true,
-      allowBind: false,
-    }],
-    'react/jsx-no-duplicate-props': 'error',
-    'react/jsx-no-literals': 'off',
-    'react/jsx-no-target-blank': 'error',
-    'react/jsx-no-undef': 'error',
-    'react/jsx-pascal-case': 'error',
-    'react/jsx-sort-props': 'off',
-    'react/jsx-space-before-closing': ['error', 'always'],
-    'react/jsx-uses-react': 'error',
-    'react/jsx-uses-vars': 'error',
   },
 };
