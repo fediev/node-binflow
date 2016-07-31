@@ -790,25 +790,31 @@ describe('binflow instance', () => {
       prop7: 'int8',
     };
     const bnf = binflow.createBinflow(stru);
-    const doTest = (field, expected) => {
+    const doTest = (field, expected, subfield) => {
       const buf = Buffer.from(
         '010201020201040306050103020406050102030101020301', 'hex'
       );
-      const result = bnf.get(buf, field);
+      const result = bnf.get(buf, field, subfield);
       result.should.eql(expected);
     };
 
-    it('should set string field', () => {
+    it('should get string field', () => {
       const field = 'prop2';
       const expected = 0x0102;
       doTest(field, expected);
     });
-    it('should set array field', () => {
+    it('should get array field', () => {
       const field = 'prop3';
       const expected = [0x0102, 0x0304, 0x0506];
       doTest(field, expected);
     });
-    it('should set object array field', () => {
+    it('should get array item field', () => {
+      const field = 'prop3';
+      const subfield = 1;
+      const expected = 0x0304;
+      doTest(field, expected, subfield);
+    });
+    it('should get object array field', () => {
       const field = 'prop4';
       const expected = [
         { oprop1: 0x01, oprop2: 0x0203 },
@@ -816,7 +822,7 @@ describe('binflow instance', () => {
       ];
       doTest(field, expected);
     });
-    it('should set object field', () => {
+    it('should get object field', () => {
       const field = 'prop5';
       const expected = {
         subprop1: 0x0102,
@@ -824,17 +830,23 @@ describe('binflow instance', () => {
       };
       doTest(field, expected);
     });
-    it('should set object prop field', () => {
+    it('should get object prop field', () => {
       const field = 'subprop1';
       const expected = 0x0102;
       doTest(field, expected);
     });
-    it('should set nested object prop field', () => {
+    it('should get nested object prop field', () => {
       const field = 'subsubprop2';
       const expected = 0x03;
       doTest(field, expected);
     });
-    it('should set string field 2', () => {
+    it('should get object child field', () => {
+      const field = 'prop5';
+      const subfield = 'subprop2';
+      const expected = 0x03;
+      doTest(field, expected, subfield);
+    });
+    it('should get string field 2', () => {
       const field = 'prop7';
       const expected = 0x01;
       doTest(field, expected);
