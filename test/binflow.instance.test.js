@@ -92,78 +92,62 @@ describe('binflow instance', () => {
 
   describe('struct()', () => {
     it('should reset structure of binflow', () => {
-      const stru = {
+      const stru1 = {
         prop1: 'uint32',
-        prop2: 'uint8',
-        prop3: 'uint16',
       };
       const expected = {
         prop1: 0x04030201,
-        prop2: 0x05,
-        prop3: 0x0706,
       };
-      const bnf = binflow.createBinflow(stru);
+      const bnf = binflow.createBinflow(stru1);
       bnf.parse(buf1234).should.eql(expected);
       const stru2 = {
         prop1: 'uint16',
-        prop2: 'uint32',
-        prop3: 'uint8',
       };
       const expected2 = {
         prop1: 0x0201,
-        prop2: 0x06050403,
-        prop3: 0x07,
       };
       bnf.struct(stru2);
       bnf.parse(buf1234).should.eql(expected2);
     });
-    it('should reset endian of binflow', () => {
+    it('should preserve endian without in-stru endian and param', () => {
       const stru = {
         prop1: 'uint32',
-        prop2: 'uint8',
-        prop3: 'uint16',
-      };
-      const expectedLE = {
-        prop1: 0x04030201,
-        prop2: 0x05,
-        prop3: 0x0706,
-      };
-      const expectedBE = {
-        prop1: 0x01020304,
-        prop2: 0x05,
-        prop3: 0x0607,
-      };
-      const bnf = binflow.createBinflow(stru, 'LE');
-      bnf.parse(buf1234).should.eql(expectedLE);
-      bnf.struct(stru, 'BE');
-      bnf.parse(buf1234).should.eql(expectedBE);
-    });
-    it('should preserve endian of binflow with no endian', () => {
-      const stru = {
-        prop1: 'uint32',
-        prop2: 'uint8',
-        prop3: 'uint16',
-      };
-      const expected = {
-        prop1: 0x01020304,
-        prop2: 0x05,
-        prop3: 0x0607,
       };
       const bnf = binflow.createBinflow(stru, 'BE');
-      bnf.parse(buf1234).should.eql(expected);
-      const stru2 = {
-        prop1: 'uint16',
-        prop2: 'uint32',
-        prop3: 'uint8',
-      };
-      const expected2 = {
-        prop1: 0x0102,
-        prop2: 0x03040506,
-        prop3: 0x07,
-      };
-      bnf.struct(stru2);
-      bnf.parse(buf1234).should.eql(expected2);
+      bnf.getEndian().should.eql('BE');
+      bnf.struct(stru);
+      bnf.getEndian().should.eql('BE');
     });
+    it('should reset endian with in-stru endian and no param', () => {
+      const stru = {
+        $endian: 'LE',
+        prop1: 'uint32',
+      };
+      const bnf = binflow.createBinflow(stru, 'BE');
+      bnf.getEndian().should.eql('BE');
+      bnf.struct(stru);
+      bnf.getEndian().should.eql('LE');
+    });
+    it('should reset endian with no in-stru endian and param', () => {
+      const stru = {
+        prop1: 'uint32',
+      };
+      const bnf = binflow.createBinflow(stru, 'BE');
+      bnf.getEndian().should.eql('BE');
+      bnf.struct(stru, 'LE');
+      bnf.getEndian().should.eql('LE');
+    });
+    it('should reset endian with in-stru endian and param', () => {
+      const stru = {
+        $endian: 'BE',
+        prop1: 'uint32',
+      };
+      const bnf = binflow.createBinflow(stru, 'BE');
+      bnf.getEndian().should.eql('BE');
+      bnf.struct(stru, 'LE');
+      bnf.getEndian().should.eql('LE');
+    });
+
     it('should return a bnf instance for chaining', () => {
       const stru = {
         prop1: 'uint32',
