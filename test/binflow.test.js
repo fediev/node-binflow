@@ -966,6 +966,48 @@ describe('Binflow', () => {
       result.token.should.eql(expected, 'token');
       result.offset.should.eql(63, 'offset');
     });
+
+    it('should get info of array item token field', () => {
+      const field = 'prop3';
+      const subfield = 1;
+      const result = _getTokenOffsetOfField(fullSpecStructure, field, subfield);
+      const expected = fullSpecStructure[field][0];
+      result.token.should.eql(expected, 'token');
+      result.offset.should.eql(5, 'offset');
+    });
+    it('should get info of object array item token field', () => {
+      const field = 'prop6';
+      const subfield = 2;
+      const result = _getTokenOffsetOfField(fullSpecStructure, field, subfield);
+      const expected = fullSpecStructure[field][0];
+      result.token.should.eql(expected, 'token');
+      result.offset.should.eql(26, 'offset');
+    });
+    it('should throw RangeError when array item index is overflow', () => {
+      const field = 'prop3';
+      const subfield = 3;
+      const doTest = () => {
+        _getTokenOffsetOfField(fullSpecStructure, field, subfield);
+      };
+      doTest.should.throw(RangeError);
+    });
+    it('should get info of object child field', () => {
+      const field = 'prop9';
+      const subfield = 'sub2prop2';
+      const result = _getTokenOffsetOfField(fullSpecStructure, field, subfield);
+      const expected = fullSpecStructure[field][subfield];
+      result.token.should.eql(expected, 'token');
+      result.offset.should.eql(70, 'offset');
+    });
+    it('should throw RangeError when object child does not exist', () => {
+      const field = 'prop9';
+      const subfield = '_NOT_EXIST_';
+      const doTest = () => {
+        _getTokenOffsetOfField(fullSpecStructure, field, subfield);
+      };
+      doTest.should.throw(RangeError);
+    });
+
     it('should get size of structue without field', () => {
       const result = _getTokenOffsetOfField(fullSpecStructure);
       result.offset.should.eql(77, 'offset');
