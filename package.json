@@ -12,6 +12,7 @@
     "mocha": "^2.5.3"
   },
   "scripts": {
+    "docs": "jsdoc -d docs lib",
     "lint": "eslint lib test",
     "prerelease": "npm run lint",
     "test": "mocha test/**/*.test.js",
