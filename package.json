@@ -1,9 +1,10 @@
 {
   "name": "binflow",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "buffer parser and encoder",
   "main": "index.js",
   "directories": {
+    "doc": "docs",
     "test": "test"
   },
   "dependencies": {},
@@ -27,5 +28,11 @@
   "bugs": {
     "url": "https://github.com/fediev/node-binflow/issues"
   },
-  "homepage": "https://github.com/fediev/node-binflow#readme"
+  "homepage": "https://github.com/fediev/node-binflow#readme",
+  "keywords": [
+    "binary",
+    "buffer",
+    "parser",
+    "encoder"
+  ]
 }
