@@ -687,12 +687,12 @@ describe('binflow instance', () => {
       prop7: 'int8',
     };
     const bnf = binflow.createBinflow(stru);
-    const doTest = (field, value, expected) => {
+    const doTest = (field, value, expected, subfield) => {
       const expectedBuf = Buffer.from(expected, 'hex');
       const buf = Buffer.from(
         'ffffffffffffffffffffffffffffffffffffffffffffffff', 'hex'
       );
-      bnf.set(buf, field, value);
+      bnf.set(buf, field, subfield, value);
       buf.should.eql(expectedBuf);
     };
 
@@ -707,6 +707,13 @@ describe('binflow instance', () => {
       const value = [0x0102, 0x0304, 0x0506];
       const expected = 'ffffffff020104030605ffffffffffffffffffffffffffff';
       doTest(field, value, expected);
+    });
+    it('should set array item field', () => {
+      const field = 'prop3';
+      const subfield = 1;
+      const value = 0x0304;
+      const expected = 'ffffffffffff0403ffffffffffffffffffffffffffffffff';
+      doTest(field, value, expected, subfield);
     });
     it('should set object array field', () => {
       const field = 'prop4';
@@ -737,6 +744,13 @@ describe('binflow instance', () => {
       const value = 0x01;
       const expected = 'ffffffffffffffffffffffffffffffffffffffffffff01ff';
       doTest(field, value, expected);
+    });
+    it('should set object child field', () => {
+      const field = 'prop5';
+      const subfield = 'subprop2';
+      const value = 0x03;
+      const expected = 'ffffffffffffffffffffffffffffffffffff03ffffffffff';
+      doTest(field, value, expected, subfield);
     });
     it('should set string field 2', () => {
       const field = 'prop7';
