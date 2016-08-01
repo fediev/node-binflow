@@ -880,6 +880,15 @@ describe('Binflow', () => {
       const expecteds = ['DBE', 'DBE', 'DBE'];
       doFloatDoubleTest(type, expecteds);
     });
+
+    it('should not write when value is undefined', () => {
+      // eslint-disable-next-line no-undefined
+      const value = undefined;
+      const buf = Buffer.from('ffffffff', 'hex');
+      const expected = Buffer.from(buf);
+      _writeByType(value, buf, 0, 'int32');
+      buf.should.eql(expected);
+    });
   });
 
   describe('_getValueSize()', () => {
