@@ -397,13 +397,15 @@ describe('binflow instance', () => {
       result.should.eql(expected);
     });
 
-    it('should throw RangeError when buf is not enough', () => {
+    it('should return already parsed part when buffer is not enough', () => {
       const stru = {
-        prop1: 'uint32',
+        prop1: 'uint8',
+        prop2: 'uint16',
       };
+      const expected = { prop1: 0x01 };
       const bnf = binflow.createBinflow(stru);
-      const doTest = () => bnf.parse(buf12);
-      doTest.should.throw(RangeError);
+      const result = bnf.parse(buf12);
+      result.should.eql(expected);
     });
 
     it('should parse on full spec structure', () => {
@@ -864,6 +866,16 @@ describe('binflow instance', () => {
       const field = 'prop7';
       const expected = 0x01;
       doTest(field, expected);
+    });
+
+    it('should get undefined when buffer is not enough', () => {
+      const stru2 = {
+        prop1: 'int8',
+        prop2: 'int16',
+      };
+      const bnf2 = binflow.createBinflow(stru2);
+      // eslint-disable-next-line no-undefined
+      should.equal(bnf2.get(buf12, 'prop2'), undefined);
     });
   });
 
