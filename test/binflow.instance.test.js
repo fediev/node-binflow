@@ -830,6 +830,22 @@ describe('binflow instance', () => {
       const expected = 'ffffffffffffffffffffffffffffffffffffffffffffffff';
       doTest(field, value, expected, index);
     });
+    it('should set multi values with object value', () => {
+      const values = {
+        prop2: 0x0102,
+        prop3: [0x01, 0x02],
+        prop7: { subprop2: 0x01 },
+        prop9: 0x01,
+      };
+      const expected = Buffer.from(
+        'ff02010102ffffffffffffffffffffffffff01ffffffff01', 'hex'
+      );
+      const buf = Buffer.from(
+        'ffffffffffffffffffffffffffffffffffffffffffffffff', 'hex'
+      );
+      bnf.set(buf, values);
+      buf.should.eql(expected);
+    });
 
     it('should set buffer of available array values only', () => {
       const field = 'prop3';
