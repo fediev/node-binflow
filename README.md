@@ -121,6 +121,43 @@ preserved.
 
 # API
 
+## `createBinflow(stru[, endian])`
+
+Create a `binflow` instance. See the section 'How to Use'.
+
+## `struct(newStru[, newEndian])`
+
+Reset the binflow structure.
+
+```js
+const binflow = require('binflow');
+const stru = {
+  prop1: 'int8',
+  prop2: 'uint16',
+};
+const bnf = binflow.createBinflow(stru);
+
+const newStru = {
+  prop1: 'int16',
+};
+bnf.struct(newStru);
+```
+
+## `setEndian(newEndian)`
+
+Reset the structure endian.
+
+```js
+const binflow = require('binflow');
+const stru = {
+  prop1: 'int8',
+  prop2: 'uint16',
+};
+const bnf = binflow.createBinflow(stru, 'BE');
+
+bnf.setEndian('LE');
+```
+
 ## `parse(buf[, startAt])`
 
 Parse buffer.
@@ -139,9 +176,10 @@ const parsed = bnf.parse(buf);
 const parsed2 = bnf.parse(buf, 1);
 ```
 
-## `encode(values)`
+## `encode(values[, baseBuf])`
 
-Encode values as buffer.
+Encode values to buffer. When the value for the field is not supplied,
+the buffer for the field will not change.
 
 ```js
 const binflow = require('binflow');
@@ -158,9 +196,10 @@ const values = {
 const encoded = bnf.encode(values);
 ```
 
-## `set(buf, field, [subfield,] value)`
+## `set(buf, field[, subfield][, value])`
 
-Set value in buffer.
+Set value in buffer. When the value for the field is not supplied,
+the buffer for the field will not change.
 
 ```js
 const binflow = require('binflow');
@@ -176,8 +215,16 @@ const bnf = binflow.createBinflow(stur);
 bnf.set(buf, 'prop1', 0x01);
 bnf.set(buf, 'prop2', [0x02, 0x03]);
 bnf.set(buf, 'prop3', { sub1: 0x0405, sub2: 0x06 });
+// set(buf, field, index, value)
 bnf.set(buf, 'prop2', 1, 0x07);
+// set(buf, field, property, value)
 bnf.set(buf, 'prop3', 'sub2', 0x08);
+// set(buf, values);
+const values = {
+  prop1: 0x01,
+  prop2: [0x02],
+};
+bnf.set(buf, values);
 // chainable
 bnf.set(buf, 'prop1', 0x01)
    .set(buf, 'prop2', [0x02, 0x03])
@@ -202,6 +249,8 @@ const bnf = binflow.createBinflow(stur);
 bnf.get(buf, 'prop1');
 bnf.get(buf, 'prop2');
 bnf.get(buf, 'prop3');
+// get(buf, field, index)
 bnf.get(buf, 'prop2', 1);
+// get(buf, field, property)
 bnf.get(buf, 'prop3', 'sub2');
 ```
