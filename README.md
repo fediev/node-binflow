@@ -118,7 +118,12 @@ default endian is 'LE'. When binflow's structure is reset
 without in-structure endian and endian param, current structure endian is
 preserved.
 
-## Parse : `parse(buf[, startAt])`
+
+# API
+
+## `parse(buf[, startAt])`
+
+Parse buffer.
 
 ```js
 const binflow = require('binflow');
@@ -134,7 +139,9 @@ const parsed = bnf.parse(buf);
 const parsed2 = bnf.parse(buf, 1);
 ```
 
-## Encode : `encode(values)`
+## `encode(values)`
+
+Encode values as buffer.
 
 ```js
 const binflow = require('binflow');
@@ -151,7 +158,9 @@ const values = {
 const encoded = bnf.encode(values);
 ```
 
-## Set value in buffer : `set(buf, field, [subfield,] value)`
+## `set(buf, field, [subfield,] value)`
+
+Set value in buffer.
 
 ```js
 const binflow = require('binflow');
@@ -172,10 +181,12 @@ bnf.set(buf, 'prop3', 'sub2', 0x08);
 // chainable
 bnf.set(buf, 'prop1', 0x01)
    .set(buf, 'prop2', [0x02, 0x03])
-  .set(buf, 'prop3', { sub1: 0x0405, sub2: 0x06 });
+   .set(buf, 'prop3', { sub1: 0x0405, sub2: 0x06 });
 ```
 
-## Get value from buffer : `get(buf, field[, subfield])`
+## `get(buf, field[, subfield])`
+
+Get value from buffer.
 
 ```js
 const binflow = require('binflow');
