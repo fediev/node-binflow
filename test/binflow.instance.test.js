@@ -417,6 +417,13 @@ describe('binflow instance', () => {
   });
 
   describe('encode()', () => {
+    const doTest = (stru, values, expected, endian) => {
+      const bnf = binflow.createBinflow(stru, endian);
+      const expectedBuf = Buffer.from(expected, 'hex');
+      const result = bnf.encode(values);
+      result.should.eql(expectedBuf);
+    };
+
     it('should encode single string token', () => {
       const stru = {
         prop1: 'uint32',
@@ -424,10 +431,8 @@ describe('binflow instance', () => {
       const values = {
         prop1: 1,
       };
-      const expected = Buffer.from('01000000', 'hex');
-      const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(values);
-      result.should.eql(expected);
+      const expected = '01000000';
+      doTest(stru, values, expected);
     });
     it('should encode multi string token', () => {
       const stru = {
@@ -440,10 +445,8 @@ describe('binflow instance', () => {
         prop2: 2,
         prop3: 3,
       };
-      const expected = Buffer.from('0100020000000003', 'hex');
-      const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(values);
-      result.should.eql(expected);
+      const expected = '0100020000000003';
+      doTest(stru, values, expected);
     });
     it('should encode multi string token with LE', () => {
       const stru = {
@@ -456,10 +459,8 @@ describe('binflow instance', () => {
         prop2: 2,
         prop3: 3,
       };
-      const expected = Buffer.from('0100020000000003', 'hex');
-      const bnf = binflow.createBinflow(stru, 'LE');
-      const result = bnf.encode(values);
-      result.should.eql(expected);
+      const expected = '0100020000000003';
+      doTest(stru, values, expected, 'LE');
     });
     it('should encode multi string token with BE', () => {
       const stru = {
@@ -472,10 +473,8 @@ describe('binflow instance', () => {
         prop2: 2,
         prop3: 3,
       };
-      const expected = Buffer.from('0001020000000003', 'hex');
-      const bnf = binflow.createBinflow(stru, 'BE');
-      const result = bnf.encode(values);
-      result.should.eql(expected);
+      const expected = '0001020000000003';
+      doTest(stru, values, expected, 'BE');
     });
     it('should encode -1 correctly', () => {
       const stru = {
@@ -486,10 +485,8 @@ describe('binflow instance', () => {
         prop1: -1,
         prop2: 255,
       };
-      const expected = Buffer.from('ffff', 'hex');
-      const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(values);
-      result.should.eql(expected);
+      const expected = 'ffff';
+      doTest(stru, values, expected);
     });
 
     it('should encode array token', () => {
@@ -499,10 +496,8 @@ describe('binflow instance', () => {
       const values = {
         prop1: [1, 2],
       };
-      const expected = Buffer.from('01000200', 'hex');
-      const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(values);
-      result.should.eql(expected);
+      const expected = '01000200';
+      doTest(stru, values, expected);
     });
     it('should encode array token with string token', () => {
       const stru = {
@@ -515,12 +510,10 @@ describe('binflow instance', () => {
         prop2: [2, 3],
         prop3: 4,
       };
-      const expected = Buffer.from('010200030004', 'hex');
-      const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(values);
-      result.should.eql(expected);
+      const expected = '010200030004';
+      doTest(stru, values, expected);
     });
-    it('should encode `byte` array token', () => {
+    it('should encode `byte` type token', () => {
       const stru = {
         prop1: 'int8',
         prop2: ['byte', 4],
@@ -531,11 +524,10 @@ describe('binflow instance', () => {
         prop2: Buffer.from('02030405', 'hex'),
         prop3: 6,
       };
-      const expected = Buffer.from('010203040506', 'hex');
-      const bnf = binflow.createBinflow(stru);
-      bnf.encode(values).should.eql(expected);
+      const expected = '010203040506';
+      doTest(stru, values, expected);
     });
-    it('should encode `string` array token', () => {
+    it('should encode `string` type token', () => {
       const str = 'STRING 문자열 123!@#';
       const strBuf = Buffer.from(str, 'utf8');
       const stru = {
@@ -573,9 +565,8 @@ describe('binflow instance', () => {
         ],
         prop3: 0x08,
       };
-      const expected = Buffer.from('0102030405060708', 'hex');
-      const bnf = binflow.createBinflow(stru);
-      bnf.encode(values).should.eql(expected);
+      const expected = '0102030405060708';
+      doTest(stru, values, expected);
     });
 
     it('should encode object token', () => {
@@ -591,32 +582,30 @@ describe('binflow instance', () => {
           subprop2: 0x03,
         },
       };
-      const expected = Buffer.from('020103', 'hex');
-      const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(values);
-      result.should.eql(expected);
+      const expected = '020103';
+      doTest(stru, values, expected);
     });
-    it('should encode object token with string token', () => {
+    it('should encode object token in object token field', () => {
       const stru = {
-        prop1: 'uint8',
-        prop2: {
-          subprop1: 'uint16',
-          subprop2: 'uint8',
+        prop1: {
+          sub1: 'int8',
+          sub2: {
+            ssub1: 'int16',
+            ssub2: 'int8',
+          },
         },
-        prop3: 'uint8',
       };
       const values = {
-        prop1: 0x01,
-        prop2: {
-          subprop1: 0x0203,
-          subprop2: 0x04,
+        prop1: {
+          sub1: 0x01,
+          sub2: {
+            ssub1: 0x0203,
+            ssub2: 0x04,
+          },
         },
-        prop3: 0x05,
       };
-      const expected = Buffer.from('0103020405', 'hex');
-      const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(values);
-      result.should.eql(expected);
+      const expected = '01030204';
+      doTest(stru, values, expected);
     });
 
     it('should ignore `$endian`', () => {
@@ -629,10 +618,8 @@ describe('binflow instance', () => {
         prop1: 0x0102,
         prop2: 0x03040506,
       };
-      const expected = Buffer.from('010203040506', 'hex');
-      const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(values);
-      result.should.eql(expected);
+      const expected = '010203040506';
+      doTest(stru, values, expected);
     });
     it('should recognize nested objects `$endian`', () => {
       const stru = {
@@ -649,12 +636,89 @@ describe('binflow instance', () => {
           subprop1: 0x0304,
         },
       };
-      const expected = Buffer.from('01020403', 'hex');
-      const bnf = binflow.createBinflow(stru);
-      const result = bnf.encode(values);
-      result.should.eql(expected);
+      const expected = '01020403';
+      doTest(stru, values, expected);
     });
 
+    it('should set buffer of available array values only', () => {
+      const stru = {
+        prop1: ['int8', 3],
+      };
+      const values = {
+        prop1: [0x01, 0x02],
+      };
+      const expected = '010200';
+      doTest(stru, values, expected);
+    });
+    it('should set buffer of available object array values only', () => {
+      const stru = {
+        prop1: [{
+          sub1: 'int8',
+          sub2: 'int16',
+        }, 3],
+      };
+      const values = {
+        prop1: [
+          { sub1: 0x01, sub2: 0x0203 },
+          { sub1: 0x04, sub2: 0x0506 },
+        ],
+      };
+      const expected = '010302040605000000';
+      doTest(stru, values, expected);
+    });
+    it('should set buffer of available object array property only', () => {
+      const stru = {
+        prop1: [{
+          sub1: 'int8',
+          sub2: 'int16',
+        }, 3],
+      };
+      const values = {
+        prop1: [
+          { sub1: 0x01 },
+          { sub2: 0x0203 },
+          { sub1: 0x04 },
+        ],
+      };
+      const expected = '010000000302040000';
+      doTest(stru, values, expected);
+    });
+    it('should set buffer of available object property values only', () => {
+      const stru = {
+        prop1: {
+          sub1: 'int8',
+          sub2: 'int16',
+        },
+      };
+      const values = {
+        prop1: { sub2: 0x0203 },
+      };
+      const expected = '000302';
+      doTest(stru, values, expected);
+    });
+
+    it('should not set buffer when value is undefined', () => {
+      const stru = {
+        prop1: 'int8',
+        prop2: 'int8',
+        prop3: ['int8', 2],
+        prop4: ['byte', 2],
+        prop5: ['string', 2],
+        prop6: [{ sub1: 'int8' }, 2],
+        prop7: { sub2: 'int8', sub3: 'int8' },
+        prop8: { sub4: 'int8', sub5: { ssub1: 'int8', ssub2: 'int8' } },
+        prop9: 'int8',
+      };
+      const values = {
+        prop1: 0x01,
+        prop9: 0x02,
+      };
+      const baseBuf = Buffer.from('ffffffffffffffffffffffffffffffff', 'hex');
+      const expected = Buffer.from('01ffffffffffffffffffffffffffff02', 'hex');
+      const bnf = binflow.createBinflow(stru);
+      const result = bnf.encode(values, baseBuf);
+      result.should.eql(expected);
+    });
     it('should encode on full spec structure', () => {
       const values = fssValues;
       const expected = fssBuf;
@@ -668,25 +732,27 @@ describe('binflow instance', () => {
     // structure size : 24 bytes
     const stru = {
       $endian: 'BE',
-      prop1: 'int16',
-      prop2: 'int16BE',
-      prop3: ['int16LE', 3],
-      prop4: [{
+      prop1: 'int8',
+      prop2: 'int16LE',
+      prop3: ['int8', 3],
+      prop4: ['byte', 2],
+      prop5: ['string', 2],
+      prop6: [{
         oprop1: 'int8',
         oprop2: 'int16LE',
       }, 2],
-      prop5: {
+      prop7: {
         subprop1: 'int16',
         subprop2: 'int8',
       },
-      prop6: {
+      prop8: {
         subprop3: 'int8',
         subprop4: {
-          subsubprop1: 'int16',
-          subsubprop2: 'int8',
+          subsubprop1: 'int8',
+          subsubprop2: 'int16LE',
         },
       },
-      prop7: 'int8',
+      prop9: 'int8',
     };
     const bnf = binflow.createBinflow(stru);
     const doTest = (field, value, expected, subfield) => {
@@ -698,27 +764,32 @@ describe('binflow instance', () => {
       buf.should.eql(expectedBuf);
     };
 
-    it('should set string field', () => {
+    it('should set string token field', () => {
       const field = 'prop2';
       const value = 0x0102;
-      const expected = 'ffff0102ffffffffffffffffffffffffffffffffffffffff';
+      const expected = 'ff0201ffffffffffffffffffffffffffffffffffffffffff';
       doTest(field, value, expected);
     });
-    it('should set array field', () => {
+    it('should set array token field', () => {
       const field = 'prop3';
-      const value = [0x0102, 0x0304, 0x0506];
-      const expected = 'ffffffff020104030605ffffffffffffffffffffffffffff';
+      const value = [0x01, 0x02, 0x03];
+      const expected = 'ffffff010203ffffffffffffffffffffffffffffffffffff';
       doTest(field, value, expected);
     });
-    it('should set array item field', () => {
-      const field = 'prop3';
-      const subfield = 1;
-      const value = 0x0304;
-      const expected = 'ffffffffffff0403ffffffffffffffffffffffffffffffff';
-      doTest(field, value, expected, subfield);
-    });
-    it('should set object array field', () => {
+    it('should set byte type token field', () => {
       const field = 'prop4';
+      const value = Buffer.from('0102', 'hex');
+      const expected = 'ffffffffffff0102ffffffffffffffffffffffffffffffff';
+      doTest(field, value, expected);
+    });
+    it('should set string type token field', () => {
+      const field = 'prop5';
+      const value = 'ad';
+      const expected = 'ffffffffffffffff6164ffffffffffffffffffffffffffff';
+      doTest(field, value, expected);
+    });
+    it('should set object array token field', () => {
+      const field = 'prop6';
       const value = [
         { oprop1: 0x01, oprop2: 0x0203 },
         { oprop1: 0x04, oprop2: 0x0506 },
@@ -726,8 +797,8 @@ describe('binflow instance', () => {
       const expected = 'ffffffffffffffffffff010302040605ffffffffffffffff';
       doTest(field, value, expected);
     });
-    it('should set object field', () => {
-      const field = 'prop5';
+    it('should set object token field', () => {
+      const field = 'prop7';
       const value = {
         subprop1: 0x0102,
         subprop2: 0x03,
@@ -735,30 +806,84 @@ describe('binflow instance', () => {
       const expected = 'ffffffffffffffffffffffffffffffff010203ffffffffff';
       doTest(field, value, expected);
     });
-    it('should set object prop field', () => {
-      const field = 'subprop1';
-      const value = 0x0102;
-      const expected = 'ffffffffffffffffffffffffffffffff0102ffffffffffff';
+    it('should set object token in object token field', () => {
+      const field = 'subprop4';
+      const value = {
+        subsubprop1: 0x01,
+        subsubprop2: 0x0203,
+      };
+      const expected = 'ffffffffffffffffffffffffffffffffffffffff010302ff';
       doTest(field, value, expected);
     });
-    it('should set nested object prop field', () => {
-      const field = 'subsubprop2';
+
+    it('should set array token field with index', () => {
+      const field = 'prop3';
+      const index = 1;
       const value = 0x01;
-      const expected = 'ffffffffffffffffffffffffffffffffffffffffffff01ff';
+      const expected = 'ffffffff01ffffffffffffffffffffffffffffffffffffff';
+      doTest(field, value, expected, index);
+    });
+    it('should not set with overflowed index', () => {
+      const field = 'prop3';
+      const index = 3;
+      const value = 0x01;
+      const expected = 'ffffffffffffffffffffffffffffffffffffffffffffffff';
+      doTest(field, value, expected, index);
+    });
+
+    it('should set buffer of available array values only', () => {
+      const field = 'prop3';
+      const value = [0x01, 0x02];
+      const expected = 'ffffff0102ffffffffffffffffffffffffffffffffffffff';
       doTest(field, value, expected);
     });
-    it('should set object child field', () => {
-      const field = 'prop5';
-      const subfield = 'subprop2';
-      const value = 0x03;
-      const expected = 'ffffffffffffffffffffffffffffffffffff03ffffffffff';
-      doTest(field, value, expected, subfield);
+    it('should set buffer of available object array values only', () => {
+      const field = 'prop6';
+      const value = [
+        { oprop1: 0x01, oprop2: 0x0203 },
+      ];
+      const expected = 'ffffffffffffffffffff010302ffffffffffffffffffffff';
+      doTest(field, value, expected);
     });
-    it('should set string field 2', () => {
+    it('should set buffer of available object array property only', () => {
+      const field = 'prop6';
+      const value = [
+        { oprop1: 0x01 },
+        { oprop1: 0x02 },
+      ];
+      const expected = 'ffffffffffffffffffff01ffff02ffffffffffffffffffff';
+      doTest(field, value, expected);
+    });
+    it('should set buffer of available object property values only', () => {
       const field = 'prop7';
-      const value = 0x01;
-      const expected = 'ffffffffffffffffffffffffffffffffffffffffffffff01';
+      const value = {
+        subprop2: 0x01,
+      };
+      const expected = 'ffffffffffffffffffffffffffffffffffff01ffffffffff';
       doTest(field, value, expected);
+    });
+
+    it('should not set buffer when value is undefined', () => {
+      const stru2 = {
+        prop1: 'int8',
+        prop2: 'int8',
+        prop3: ['int8', 2],
+        prop4: ['byte', 2],
+        prop5: ['string', 2],
+        prop6: [{ sub1: 'int8' }, 2],
+        prop7: { sub2: 'int8', sub3: 'int8' },
+        prop8: { sub4: 'int8', sub5: { ssub1: 'int8', ssub2: 'int8' } },
+        prop9: 'int8',
+      };
+      // eslint-disable-next-line no-undefined
+      const value = undefined;
+      const bnf2 = binflow.createBinflow(stru2);
+      const buf = Buffer.from('ffffffffffffffffffffffffffffffff', 'hex');
+      const expected = Buffer.from(buf);
+      Object.keys(stru2).forEach((key) => {
+        bnf2.set(buf, key, value);
+      });
+      buf.should.eql(expected);
     });
 
     it('should return a bnf instance for chaining', () => {
