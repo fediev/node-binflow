@@ -68,6 +68,16 @@ describe('Binflow', () => {
     });
   });
 
+  describe('getStructureSize()', () => {
+    it('should get structure byte size', () => {
+      binflow.getStructureSize(fullSpecStructure).should.eql(77);
+    });
+    it('should get 0 on empty structure', () => {
+      const stru = {};
+      binflow.getStructureSize(stru).should.eql(0);
+    });
+  });
+
   describe('_hasEndian()', () => {
     const _hasEndian = binflow._hasEndian;
 
@@ -1126,16 +1136,6 @@ describe('Binflow', () => {
       const result = _getTokenOffsetOfField(struWithEndian, field);
       result.token.should.eql(struWithEndian[field], 'token');
       result.offset.should.eql(2, 'offset');
-    });
-  });
-
-  describe('_getStructureSize()', () => {
-    it('should get structure byte size', () => {
-      binflow._getStructureSize(fullSpecStructure).should.eql(77);
-    });
-    it('should get 0 on empty structure', () => {
-      const stru = {};
-      binflow._getStructureSize(stru).should.eql(0);
     });
   });
 });
