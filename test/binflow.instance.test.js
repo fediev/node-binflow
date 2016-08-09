@@ -1020,10 +1020,10 @@ describe('binflow instance', () => {
     });
   });
 
-  describe('getConsumedBufferSize()', () => {
+  describe('_getConsumedBufferSize()', () => {
     it('should get 0 on new binflow object', () => {
       const bnf = binflow.createBinflow();
-      const result = bnf.getConsumedBufferSize();
+      const result = bnf._getConsumedBufferSize();
       result.should.eql(0);
     });
     it('should get the number of consumed buffer size', () => {
@@ -1034,7 +1034,7 @@ describe('binflow instance', () => {
       };
       const bnf = binflow.createBinflow(stru);
       bnf.parse(buf1234);
-      const result = bnf.getConsumedBufferSize();
+      const result = bnf._getConsumedBufferSize();
       result.should.eql(7);
     });
   });
