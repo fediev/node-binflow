@@ -1,6 +1,6 @@
 {
   "name": "binflow",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "buffer parser and encoder",
   "main": "index.js",
   "directories": {
