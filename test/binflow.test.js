@@ -1036,6 +1036,11 @@ describe('Binflow', () => {
       });
     });
 
+    it('should get array value size', () => {
+      const type = ['int16', 8];
+      const expected = 16;
+      _getValueSize(type).should.eql(expected);
+    });
     it('should get structure size when object is passed as type', () => {
       const type = {
         prop1: 'int32',
