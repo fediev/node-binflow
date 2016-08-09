@@ -115,11 +115,13 @@ describe('Binflow', () => {
       int16: 'int',
       int24: 'int',
       int32: 'int',
+      int48: 'int',
       int64: 'int',
       uint8: 'uint',
       uint16: 'uint',
       uint24: 'uint',
       uint32: 'uint',
+      uint48: 'uint',
       uint64: 'uint',
       'float': 'float',
       'double': 'double',
@@ -355,6 +357,21 @@ describe('Binflow', () => {
       const expected = [0x01020304, 0x02030405, 0x02030405, -1];
       doIntTest(type).should.eql(expected);
     });
+    it('should read `int48', () => {
+      const type = 'int48';
+      const expected = [0x060504030201, 0x070605040302, 0x020304050607, -1];
+      doIntTest(type).should.eql(expected);
+    });
+    it('should read `int48LE', () => {
+      const type = 'int48LE';
+      const expected = [0x060504030201, 0x070605040302, 0x070605040302, -1];
+      doIntTest(type).should.eql(expected);
+    });
+    it('should read `int48BE', () => {
+      const type = 'int48BE';
+      const expected = [0x010203040506, 0x020304050607, 0x020304050607, -1];
+      doIntTest(type).should.eql(expected);
+    });
     // buf.readIntLE, readIntBE supports up to 48 bits of accuracy
     it('should read `int64', () => {
       const type = 'int64';
@@ -435,6 +452,24 @@ describe('Binflow', () => {
     it('should read `uint32BE', () => {
       const type = 'uint32BE';
       const expected = [0x01020304, 0x02030405, 0x02030405, 0xffffffff];
+      doIntTest(type).should.eql(expected);
+    });
+    it('should read `uint48', () => {
+      const type = 'uint48';
+      const expected = [0x060504030201, 0x070605040302,
+                        0x020304050607, 0xffffffffffff];
+      doIntTest(type).should.eql(expected);
+    });
+    it('should read `uint48LE', () => {
+      const type = 'uint48LE';
+      const expected = [0x060504030201, 0x070605040302,
+                        0x070605040302, 0xffffffffffff];
+      doIntTest(type).should.eql(expected);
+    });
+    it('should read `uint48BE', () => {
+      const type = 'uint48BE';
+      const expected = [0x010203040506, 0x020304050607,
+                        0x020304050607, 0xffffffffffff];
       doIntTest(type).should.eql(expected);
     });
     // buf.readIntLE, readIntBE supports up to 48 bits of accuracy
@@ -657,6 +692,36 @@ describe('Binflow', () => {
       ];
       doIntTest(type, expecteds);
     });
+    it('should write `int48`', () => {
+      const type = 'int48';
+      const expecteds = [
+        '010000000000ffff',
+        'ff020000000000ff',
+        'ffff000000000003',
+        'ffffffffffffffff',
+      ];
+      doIntTest(type, expecteds);
+    });
+    it('should write `int48LE`', () => {
+      const type = 'int48LE';
+      const expecteds = [
+        '010000000000ffff',
+        'ff020000000000ff',
+        'ffff030000000000',
+        'ffffffffffffffff',
+      ];
+      doIntTest(type, expecteds);
+    });
+    it('should write `int48BE`', () => {
+      const type = 'int48BE';
+      const expecteds = [
+        '000000000001ffff',
+        'ff000000000002ff',
+        'ffff000000000003',
+        'ffffffffffffffff',
+      ];
+      doIntTest(type, expecteds);
+    });
     it('should write `int64`', () => {
       const type = 'int64';
       const expecteds = [
@@ -795,6 +860,33 @@ describe('Binflow', () => {
       ];
       doIntTest(type, expecteds);
     });
+    it('should write `uint48`', () => {
+      const type = 'uint48';
+      const expecteds = [
+        '010000000000ffff',
+        'ff020000000000ff',
+        'ffff000000000003',
+      ];
+      doIntTest(type, expecteds);
+    });
+    it('should write `uint48LE`', () => {
+      const type = 'uint48LE';
+      const expecteds = [
+        '010000000000ffff',
+        'ff020000000000ff',
+        'ffff030000000000',
+      ];
+      doIntTest(type, expecteds);
+    });
+    it('should write `uint48BE`', () => {
+      const type = 'uint48BE';
+      const expecteds = [
+        '000000000001ffff',
+        'ff000000000002ff',
+        'ffff000000000003',
+      ];
+      doIntTest(type, expecteds);
+    });
     it('should write `uint64`', () => {
       const type = 'uint64';
       const expecteds = [
@@ -899,11 +991,13 @@ describe('Binflow', () => {
       int16: 2,
       int24: 3,
       int32: 4,
+      int48: 6,
       int64: 8,
       uint8: 1,
       uint16: 2,
       uint24: 3,
       uint32: 4,
+      uint48: 6,
       uint64: 8,
       'float': 4,
       'double': 8,
