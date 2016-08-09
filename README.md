@@ -27,7 +27,7 @@ const bnf = binflow.createBinflow(stru);
 ```
 structure =
   $endian: 'LE' | 'BE'
-  (prop-name : token) * N
+  (prop-name: token) * N
 ```
 
 ```js
@@ -49,7 +49,7 @@ const stru = {
 
   `int8`, `int16`, `int24`, `int32`, `int48`,  `uint8`, `uint16`,
   `uint24`, `uint32`, `uint48`, `float`, `double`
-  and its endian-tailed formats (ex: `int8LE`)
+  and its endian-tailed formats (ex: `int8LE`, `uint32BE`)
 
 - array token : `['type', count]`
 
@@ -121,11 +121,25 @@ preserved.
 
 # API
 
-## `createBinflow(stru[, endian])`
+## `binflow.createBinflow(stru[, endian])`
 
 Create a `binflow` instance. See the section 'How to Use'.
 
-## `struct(newStru[, newEndian])`
+## `binflow.getStructureSize(stru)`
+
+Get the size of the structure.
+
+```js
+const binflow = require('binflow');
+const stru = {
+  prop1: 'int8',
+  prop2: 'uint16',
+};
+// returns 3
+binflow.getStructureSize(stru);
+```
+
+## `binflow#struct(newStru[, newEndian])`
 
 Reset the binflow structure.
 
@@ -143,7 +157,7 @@ const newStru = {
 bnf.struct(newStru);
 ```
 
-## `setEndian(newEndian)`
+## `binflow#setEndian(newEndian)`
 
 Reset the structure endian.
 
@@ -154,11 +168,26 @@ const stru = {
   prop2: 'uint16',
 };
 const bnf = binflow.createBinflow(stru, 'BE');
-
 bnf.setEndian('LE');
 ```
 
-## `parse(buf[, startAt])`
+## `binflow#getEndian()`
+
+Get the endian of the structure.
+
+```js
+const binflow = require('binflow');
+const stru = {
+  $endian: 'BE',
+  prop1: 'int8',
+  prop2: 'uint16',
+};
+const bnf = binflow.createBinflow(stru, 'LE');
+// returns 'LE'
+bnf.getEndian();
+```
+
+## `binflow#parse(buf[, startAt])`
 
 Parse buffer.
 
@@ -176,7 +205,7 @@ const parsed = bnf.parse(buf);
 const parsed2 = bnf.parse(buf, 1);
 ```
 
-## `encode(values[, baseBuf])`
+## `binflow#encode(values[, baseBuf])`
 
 Encode values to buffer. When the value for the field is not supplied,
 the buffer for the field will not change.
@@ -196,7 +225,7 @@ const values = {
 const encoded = bnf.encode(values);
 ```
 
-## `set(buf, field[, subfield][, value])`
+## `binflow#set(buf, field[, subfield][, value])`
 
 Set value in buffer. When the value for the field is not supplied,
 the buffer for the field will not change.
@@ -231,7 +260,7 @@ bnf.set(buf, 'prop1', 0x01)
    .set(buf, 'prop3', { sub1: 0x0405, sub2: 0x06 });
 ```
 
-## `get(buf, field[, subfield])`
+## `binflow#get(buf, field[, subfield])`
 
 Get value from buffer.
 
