@@ -78,6 +78,75 @@ describe('Binflow', () => {
     });
   });
 
+  describe('getFieldSize()', () => {
+    const getFieldSize = binflow.getFieldSize;
+    const stru = {
+      prop1: 'int16',
+      prop2: 'uint32',
+      prop3: ['int16', 3],
+      prop4: ['byte', 12],
+      prop5: ['string', 8],
+      prop6: [{ sub1: 'int16', sub2: 'uint8' }, 3],
+      prop7: {
+        sub3: 'int32',
+        sub4: ['uint16', 2],
+      },
+      prop8: {
+        sub5: 'int16',
+        sub6: {
+          ssub1: 'uint8',
+          ssub2: 'int32',
+        },
+      },
+    };
+
+    it('should get size of string token field', () => {
+      const field = 'prop2';
+      const expected = 4;
+      getFieldSize(stru, field).should.eql(expected);
+    });
+    it('should get size of array token field', () => {
+      const field = 'prop3';
+      const expected = 6;
+      getFieldSize(stru, field).should.eql(expected);
+    });
+    it('should get size of byte type token field', () => {
+      const field = 'prop4';
+      const expected = 12;
+      getFieldSize(stru, field).should.eql(expected);
+    });
+    it('should get size of string type token field', () => {
+      const field = 'prop5';
+      const expected = 8;
+      getFieldSize(stru, field).should.eql(expected);
+    });
+    it('should get size of object array token field', () => {
+      const field = 'prop6';
+      const expected = 9;
+      getFieldSize(stru, field).should.eql(expected);
+    });
+    it('should get size of object token field', () => {
+      const field = 'prop7';
+      const expected = 8;
+      getFieldSize(stru, field).should.eql(expected);
+    });
+    it('should get size of object token with object token field', () => {
+      const field = 'prop8';
+      const expected = 7;
+      getFieldSize(stru, field).should.eql(expected);
+    });
+    it('should get size of sub field in object token field', () => {
+      const field = 'sub3';
+      const expected = 4;
+      getFieldSize(stru, field).should.eql(expected);
+    });
+    it('should get size of object token field in object token field', () => {
+      const field = 'sub6';
+      const expected = 5;
+      getFieldSize(stru, field).should.eql(expected);
+    });
+  });
+
   describe('_hasEndian()', () => {
     const _hasEndian = binflow._hasEndian;
 
