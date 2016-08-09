@@ -1020,34 +1020,66 @@ describe('Binflow', () => {
       string: 1,
     };
 
-    it('should get value size of NE types', () => {
+    it('should get value size of string token NE', () => {
       binflow.NE_TYPES.forEach((type) => {
         _getValueSize(type).should.eql(sizes[type]);
       });
     });
-    it('should get value size of LE types', () => {
+    it('should get value size of string token with LE', () => {
       binflow.NE_TYPES.forEach((type) => {
         _getValueSize(type + 'LE').should.eql(sizes[type]);
       });
     });
-    it('should get value size of BE types', () => {
+    it('should get value size of string token with BE', () => {
       binflow.NE_TYPES.forEach((type) => {
         _getValueSize(type + 'BE').should.eql(sizes[type]);
       });
     });
 
-    it('should get array value size', () => {
-      const type = ['int16', 8];
+    it('should get value size of array token', () => {
+      const token = ['int16', 8];
       const expected = 16;
-      _getValueSize(type).should.eql(expected);
+      _getValueSize(token).should.eql(expected);
     });
-    it('should get structure size when object is passed as type', () => {
-      const type = {
-        prop1: 'int32',
-        prop2: ['int16', 5],
+    it('should get value size of byte type token', () => {
+      const token = ['byte', 8];
+      const expected = 8;
+      _getValueSize(token).should.eql(expected);
+    });
+    it('should get value size of string type token', () => {
+      const token = ['string', 5];
+      const expected = 5;
+      _getValueSize(token).should.eql(expected);
+    });
+    it('should get value size of object array token', () => {
+      const token = [{
+        prop1: 'int16',
+        prop2: 'int8',
+      }, 8];
+      const expected = 24;
+      _getValueSize(token).should.eql(expected);
+    });
+    it('should get value size of object token', () => {
+      const token = {
+        prop1: 'int16',
+        prop2: ['int8', 4],
       };
-      const expected = 14;
-      _getValueSize(type).should.eql(expected);
+      const expected = 6;
+      _getValueSize(token).should.eql(expected);
+    });
+    it('should get value size of object token with object token', () => {
+      const token = {
+        prop1: 'int16',
+        prop2: ['int8', 4],
+        prop3: { sub1: 'int32', sub2: 'int16' },
+      };
+      const expected = 12;
+      _getValueSize(token).should.eql(expected);
+    });
+    it('should get 0 on unsupporte token', () => {
+      const token = 123;
+      const expected = 0;
+      _getValueSize(token).should.eql(expected);
     });
   });
 
