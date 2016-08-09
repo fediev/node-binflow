@@ -139,6 +139,28 @@ const stru = {
 binflow.getStructureSize(stru);
 ```
 
+## `binflow.getFieldSize(stru, field[, subfield])`
+
+Get the size of the field.
+
+```js
+const binflow = require('binflow');
+const stru = {
+  prop1: 'int8',
+  prop2: ['uint16', 2],
+  prop3: {
+    sub1: 'int8',
+    sub2: 'int16',
+  },
+};
+// returns 1
+binflow.getFieldSize(stru, 'prop1');
+// returns 4
+binflow.getFieldSize(stru, 'prop2');
+// returns 2
+binflow.getFieldSize(stru, 'prop3', 'sub2');
+```
+
 ## `binflow#struct(newStru[, newEndian])`
 
 Reset the binflow structure.
