@@ -96,6 +96,11 @@ describe('Binflow', () => {
         _hasEndian(type + 'BE').should.be.true;
       });
     });
+    it('should get false on unsupported type', () => {
+      _hasEndian('_UNSUPPORTED_').should.be.false;
+      _hasEndian(1234).should.be.false;
+      _hasEndian({}).should.be.false;
+    });
   });
 
   describe('_getNeType()', () => {
